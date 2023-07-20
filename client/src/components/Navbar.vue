@@ -4,7 +4,8 @@ import { RouterLink } from 'vue-router';
 <template>
   <ul>
     <li><RouterLink to="/">HOME</RouterLink></li>
-    <li><RouterLink to="/form">FORM</RouterLink></li>
+    <li><RouterLink to="/basic">BASIC</RouterLink></li>
+    <li><RouterLink to="/contact">CONTACT</RouterLink></li>
   </ul>
 </template>
 <style scoped>

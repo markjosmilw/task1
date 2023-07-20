@@ -55,7 +55,7 @@ const postInfo = async (ctx) => {
     ctx.body = { message: "Data received", userId: id };
   } catch (error) {
     ctx.status = 500;
-    if (!error.code) return (ctx.body = error.details[0].message);
+    if (!error.code) return (ctx.body = {error: error.details[0].message});
     console.log(error.sqlMessage);
     ctx.body = { error: error.sqlMessage };
   }

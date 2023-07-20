@@ -1,42 +1,14 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import axios from "axios";
 import { object, string, number } from "yup";
 import swal from "sweetalert";
 
-const userIds = ref([]);
-const fetchBasic = async () => {
-  try {
-    const infos = await axios.get("http://localhost:9000/api/basic");
-    userIds.value = infos.data.map((info) => info.id);
-  } catch (error) {}
-};
-fetchBasic();
-const nextForm = ref(true);
 const info = ref({
   name: "",
   age: "",
   address: "",
 });
-const contact = ref({
-  userId: "0",
-  email: "",
-  phone: "",
-});
-const fet = async () => {
-  const res = await axios.get(
-    `http://localhost:9000/api/contact/${contact.value.userId}`
-  );
-  if (!res.data) {
-    contact.value.email = "";
-    contact.value.phone = "";
-    return;
-  }
-  contact.value.email = res.data.email;
-  contact.value.phone = res.data.phone;
-};
-
-const phoneRegex = RegExp(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/);
 const infoSchema = object({
   name: string().required().min(3, "name must be atleast 3 characters"),
   age: number()
@@ -46,32 +18,21 @@ const infoSchema = object({
     .max(120, "please enter your real age"),
   address: string().required().min(5, "address must be atleast 5 characters"),
 });
-const contactSchema = object({
-  email: string()
-    .email("Must be a valid email")
-    .required()
-    .min(10, `"email" length must be at least 10 characters long`),
-  phone: string()
-    .matches(phoneRegex, "Invalid phone")
-    .required("Phone is required"),
-});
+
 const handleForm1 = async () => {
   let er;
   try {
     er = await infoSchema.validate(info.value);
     const res = await axios.post("http://localhost:9000/api/infos", info.value);
-    contact.value.userId = res.data.userId;
     swal({
-      title: "Good job!",
-      text: "Let`s proceed to form 2",
+      title: "Success",
+      text: res.data.message,
       icon: "success",
     });
-    fetchBasic();
-    nextForm.value = !nextForm.value;
   } catch (error) {
     if (!er) {
       //frontend err
-      console.log(error);
+      console.log('frontend error');
       swal({
         title: error.name,
         text: error.message,
@@ -80,42 +41,7 @@ const handleForm1 = async () => {
       return;
     }
     //backend error
-    console.log(error.response.data.error);
-    swal({
-      title: error.name,
-      text: error.response.data.error,
-      icon: "error",
-    });
-  }
-};
-const handleForm2 = async () => {
-  let er;
-  let result;
-  try {
-    er = await contactSchema.validate(contact.value);
-    result = await axios.post(
-      "http://localhost:9000/api/contact",
-      contact.value
-    );
-    swal({
-      title: "Good job!",
-      text: result.data.message,
-      icon: "success",
-    });
-    nextForm.value = !nextForm.value;
-  } catch (error) {
-    if (!er) {
-      //frontend err
-      console.log(error);
-      swal({
-        title: error.name,
-        text: error.message,
-        icon: "error",
-      });
-      return;
-    }
-    //backend error
-    console.log(error.response.data.error);
+    console.log('backend error');
     swal({
       title: error.name,
       text: error.response.data.error,
@@ -125,28 +51,16 @@ const handleForm2 = async () => {
 };
 </script>
 <template>
-  {{ userIds }} {{ contact.userId }}
   <div style="display: flex; flex-direction: column; align-items: center">
-    <h1>{{ nextForm ? "CONTACT INFO" : "BASIC INFO" }}</h1>
-    <form v-if="!nextForm">
+    <h1>BASIC INFO</h1>
+    <form>
       <label for="name">Name</label>
       <input v-model="info.name" type="text" placeholder="Your name.." />
       <label for="age">Age</label>
       <input v-model="info.age" type="number" placeholder="Your age.." />
       <label for="address">Address</label>
       <input v-model="info.address" type="text" placeholder="Your address.." />
-      <input type="submit" value="Next" @click.prevent="handleForm1" />
-    </form>
-    <form v-else>
-      <select v-model="contact.userId" @change="fet">
-        <option disabled value="">Please select one</option>
-        <option v-for="id in userIds">{{ id }}</option>
-      </select>
-      <label for="email">Email</label>
-      <input v-model="contact.email" type="email" placeholder="Your email.." />
-      <label for="phone">Phone</label>
-      <input v-model="contact.phone" type="number" placeholder="Your phone.." />
-      <input type="submit" @click.prevent="handleForm2" />
+      <input type="submit" value="Submit" @click.prevent="handleForm1" />
     </form>
   </div>
 </template>
