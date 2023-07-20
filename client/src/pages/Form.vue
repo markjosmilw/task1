@@ -35,8 +35,11 @@ const contactSchema = object({
     .required("Phone is required"),
 });
 const handleForm1 = async () => {
+  let er;
   try {
-    await infoSchema.validate(info.value);
+    er = await infoSchema.validate(info.value);
+    const res = await axios.post("http://localhost:9000/api/infos", info.value);
+    contact.value.userId = res.data.userId;
     swal({
       title: "Good job!",
       text: "Let`s proceed to form 2",
@@ -44,9 +47,21 @@ const handleForm1 = async () => {
     });
     nextForm.value = !nextForm.value;
   } catch (error) {
+    if (!er) {
+      //frontend err
+      console.log(error);
+      swal({
+        title: error.name,
+        text: error.message,
+        icon: "error",
+      });
+      return;
+    }
+    //backend error
+    console.log(error.response.data.error);
     swal({
       title: error.name,
-      text: error.message,
+      text: error.response.data.error,
       icon: "error",
     });
   }
@@ -56,8 +71,6 @@ const handleForm2 = async () => {
   let result;
   try {
     er = await contactSchema.validate(contact.value);
-    const res = await axios.post("http://localhost:9000/api/infos", info.value);
-    contact.value.userId = res.data.userId;
     result = await axios.post(
       "http://localhost:9000/api/contact",
       contact.value
@@ -102,6 +115,7 @@ const handleForm2 = async () => {
       <input type="submit" value="Next" @click.prevent="handleForm1" />
     </form>
     <form v-else>
+      <input v-model="contact.userId" type="number" placeholder="Your userId.." />
       <label for="email">Email</label>
       <input v-model="contact.email" type="email" placeholder="Your email.." />
       <label for="phone">Phone</label>

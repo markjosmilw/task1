@@ -10,7 +10,7 @@ const infoSchema = Joi.object({
 const contactSchema = Joi.object({
   email: Joi.string().min(10).required(),
   phone: Joi.number().min(11).required(),
-  userId: Joi.number().min(99).required(),
+  userId: Joi.number().min(1).required(),
 });
 
 const getInfos = async (ctx) => {
@@ -54,11 +54,7 @@ const postContact = async (ctx) => {
     ctx.body = { message: "Data received" };
   } catch (error) {
     ctx.status = 500;
-    if (!error.code) {
-      await knex("basic_info").where({ id: ctx.request.body.userId }).del();
-      ctx.body = { error: error.details[0].message };
-      return;
-    }
+    if (!error.code) return (ctx.body = { error: error.details[0].message });
     ctx.body = { error: error.sqlMessage };
   }
 };
