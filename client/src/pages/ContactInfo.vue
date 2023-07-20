@@ -84,10 +84,10 @@ const updateForm2 = async () => {
 };
 </script>
 <template>
-  {{ userIds }} {{ contact.userId }}
   <div style="display: flex; flex-direction: column; align-items: center">
     <h1>CONTACT INFO</h1>
     <form>
+      <label for="userId">User ID</label>
       <select v-model="contact.userId" @change="fet">
         <option disabled value="">Please select one userId</option>
         <option v-for="id in userIds">{{ id }}</option>
