@@ -1,10 +1,18 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import axios from "axios";
 import { object, string, number } from "yup";
 import swal from "sweetalert";
 
-const nextForm = ref(false);
+const userIds = ref([]);
+const fetchBasic = async () => {
+  try {
+    const infos = await axios.get("http://localhost:9000/api/basic");
+    userIds.value = infos.data.map((info) => info.id);
+  } catch (error) {}
+};
+fetchBasic();
+const nextForm = ref(true);
 const info = ref({
   name: "",
   age: "",
@@ -15,6 +23,19 @@ const contact = ref({
   email: "",
   phone: "",
 });
+const fet = async () => {
+  const res = await axios.get(
+    `http://localhost:9000/api/contact/${contact.value.userId}`
+  );
+  if (!res.data) {
+    contact.value.email = "";
+    contact.value.phone = "";
+    return;
+  }
+  contact.value.email = res.data.email;
+  contact.value.phone = res.data.phone;
+};
+
 const phoneRegex = RegExp(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/);
 const infoSchema = object({
   name: string().required().min(3, "name must be atleast 3 characters"),
@@ -45,6 +66,7 @@ const handleForm1 = async () => {
       text: "Let`s proceed to form 2",
       icon: "success",
     });
+    fetchBasic();
     nextForm.value = !nextForm.value;
   } catch (error) {
     if (!er) {
@@ -103,6 +125,7 @@ const handleForm2 = async () => {
 };
 </script>
 <template>
+  {{ userIds }} {{ contact.userId }}
   <div style="display: flex; flex-direction: column; align-items: center">
     <h1>{{ nextForm ? "CONTACT INFO" : "BASIC INFO" }}</h1>
     <form v-if="!nextForm">
@@ -115,7 +138,10 @@ const handleForm2 = async () => {
       <input type="submit" value="Next" @click.prevent="handleForm1" />
     </form>
     <form v-else>
-      <input v-model="contact.userId" type="number" placeholder="Your userId.." />
+      <select v-model="contact.userId" @change="fet">
+        <option disabled value="">Please select one</option>
+        <option v-for="id in userIds">{{ id }}</option>
+      </select>
       <label for="email">Email</label>
       <input v-model="contact.email" type="email" placeholder="Your email.." />
       <label for="phone">Phone</label>
