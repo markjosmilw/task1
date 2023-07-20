@@ -28,7 +28,7 @@ const handleSearch = () => {
 fetchInfos();
 </script>
 <template>
-  <div style="display: flex; flex-direction: column; align-items: center;">
+  <div style="display: flex; flex-direction: column; align-items: center">
     <h1>HOME</h1>
     <div style="display: flex">
       <div>
@@ -36,11 +36,14 @@ fetchInfos();
           style="
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
+            gap: 100px;
           "
         >
           <h1>Data table</h1>
-          <div>
+          <div
+            style="display: flex; align-items: center; justify-content: center"
+          >
             <label for="searchInput">Search:</label>
             <input
               type="text"
