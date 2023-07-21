@@ -3,14 +3,33 @@ import { ref } from "vue";
 import axios from "axios";
 import { object, string } from "yup";
 import swal from "sweetalert";
+import _ from "lodash";
 
 const contactExist = ref(false);
+
+const contacts = ref([]);
+
 const userIds = ref([]);
 const contact = ref({
   userId: "",
   email: "",
   phone: "",
 });
+
+const infos = ref({});
+
+const fetch = async () => {
+  try {
+    const response = await axios.get("http://localhost:9000/api/infos");
+    contacts.value = response.data.contacts;
+    infos.value = response.data.infos;
+    const pp = response.data.infos.map((info) => {
+      return info.id;
+    });
+    userIds.value = pp;
+  } catch (error) {}
+};
+fetch();
 
 const phoneRegex = RegExp(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/);
 const contactSchema = object({
@@ -23,27 +42,19 @@ const contactSchema = object({
     .required("Phone is required"),
 });
 
-const getUserIds = async () => {
-  try {
-    const infos = await axios.get("http://localhost:9000/api/basic");
-    userIds.value = infos.data.map((info) => info.id);
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-const getUserId = async () => {
-  const res = await axios.get(
-    `http://localhost:9000/api/contact/${contact.value.userId}`
-  );
-  if (!res.data) {
+const getContact = async () => {
+  contact.value.userId = infos.value.id.id
+  const cont = _.find(contacts.value, {
+    userId: parseInt(contact.value.userId),
+  });
+  if (!cont) {
     contact.value.email = "";
     contact.value.phone = "";
     contactExist.value = false;
     return;
   }
-  contact.value.email = res.data.email;
-  contact.value.phone = res.data.phone;
+  contact.value.email = cont.email;
+  contact.value.phone = cont.phone;
   contactExist.value = true;
 };
 
@@ -60,7 +71,9 @@ const handleContact = async () => {
       text: result.data.message,
       icon: "success",
     });
-    getUserId();
+    contactExist.value = !contactExist.value;
+    console.log(contacts.value);
+    
   } catch (error) {
     swal({
       title: error.name,
@@ -85,6 +98,7 @@ const updateContact = async () => {
       text: result.data.message,
       icon: "success",
     });
+    
   } catch (error) {
     swal({
       title: error.name,
@@ -95,18 +109,16 @@ const updateContact = async () => {
     });
   }
 };
-
-getUserIds();
 </script>
 
 <template>
   <div style="display: flex; flex-direction: column; align-items: center">
     <h1>CONTACT INFO</h1>
     <form>
-      <label for="userId">User ID</label>
-      <select v-model="contact.userId" @change="getUserId">
-        <option disabled value="">Please select your User ID</option>
-        <option v-for="id in userIds">{{ id }}</option>
+      <label for="userId">Name</label>
+      <select v-model="infos.id" @change="getContact">
+        <option disabled value="">Please select your name</option>
+        <option v-for="id in infos" v-bind:value="id">{{ id.name }}</option>
       </select>
       <label for="email">Email</label>
       <input v-model="contact.email" type="email" placeholder="Your email.." />
@@ -116,7 +128,7 @@ getUserIds();
         type="submit"
         :disabled="!contact.email || !contact.phone"
         :class="contact.email && contact.phone ? 'd' : ''"
-        :value="contactExist?'Update':'Add'"
+        :value="contactExist ? 'Update' : 'Add'"
         @click.prevent="contactExist ? updateContact() : handleContact()"
       />
     </form>
@@ -124,5 +136,5 @@ getUserIds();
 </template>
 
 <style scoped lang="scss">
-@import '../styles/form.scss'
+@import "../styles/form.scss";
 </style>

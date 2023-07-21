@@ -8,7 +8,7 @@ const searchQuery = ref("");
 const fetchInfos = async () => {
   try {
     const response = await axios.get("http://localhost:9000/api/infos");
-    infos.value = response.data;
+    infos.value = response.data.merge;
   } catch (error) {
     console.log(error);
   }
