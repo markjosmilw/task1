@@ -3,7 +3,7 @@ import { ref } from "vue";
 import axios from "axios";
 import { object, string, number } from "yup";
 import swal from "sweetalert";
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 
 const router = useRouter();
 
@@ -33,11 +33,13 @@ const handleInfo = async () => {
       text: res.data.message,
       icon: "success",
     });
-    router.push('/contact');
+    router.push("/contact");
   } catch (error) {
     swal({
       title: error.name,
-      text: (yup ? error.response.data.error : error.message) || "404 not found",
+      text:
+        (yup ? error.response.data.error : error.message) ||
+        error.response.data,
       icon: "error",
     });
   }

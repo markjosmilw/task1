@@ -4,21 +4,35 @@ import axios from "axios";
 import { object, string } from "yup";
 import swal from "sweetalert";
 
+const contactExist = ref(false);
+const userIds = ref([]);
 const contact = ref({
   userId: "",
   email: "",
   phone: "",
 });
-const contactExist = ref(false);
-const userIds = ref([]);
-const fetchBasic = async () => {
+
+const phoneRegex = RegExp(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/);
+const contactSchema = object({
+  email: string()
+    .email("Must be a valid email")
+    .required()
+    .min(10, `"email" length must be at least 10 characters long`),
+  phone: string()
+    .matches(phoneRegex, "Invalid phone")
+    .required("Phone is required"),
+});
+
+const getUserIds = async () => {
   try {
     const infos = await axios.get("http://localhost:9000/api/basic");
     userIds.value = infos.data.map((info) => info.id);
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-const fet = async () => {
+const getUserId = async () => {
   const res = await axios.get(
     `http://localhost:9000/api/contact/${contact.value.userId}`
   );
@@ -33,21 +47,10 @@ const fet = async () => {
   contactExist.value = true;
 };
 
-const phoneRegex = RegExp(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/);
-const contactSchema = object({
-  email: string()
-    .email("Must be a valid email")
-    .required()
-    .min(10, `"email" length must be at least 10 characters long`),
-  phone: string()
-    .matches(phoneRegex, "Invalid phone")
-    .required("Phone is required"),
-});
-
-const handleForm2 = async () => {
-  let er;
+const handleContact = async () => {
+  let yup;
   try {
-    er = await contactSchema.validate(contact.value);
+    yup = await contactSchema.validate(contact.value);
     const result = await axios.post(
       "http://localhost:9000/api/contact",
       contact.value
@@ -57,66 +60,50 @@ const handleForm2 = async () => {
       text: result.data.message,
       icon: "success",
     });
-    fet();
+    getUserId();
   } catch (error) {
-    if (!er) {
-      //frontend err
-      console.log(error);
-      swal({
-        title: error.name,
-        text: error.message,
-        icon: "error",
-      });
-      return;
-    }
-    //backend error
-    console.log(error);
     swal({
       title: error.name,
-      text: error.response.data.error,
+      text:
+        (yup ? error.response.data.error : error.message) ||
+        error.response.data,
       icon: "error",
     });
   }
 };
-fetchBasic();
+
 const updateContact = async () => {
   let yup;
   try {
     yup = await contactSchema.validate(contact.value);
-    const result = await axios.put("http://localhost:9000/api/contact", contact.value);
+    const result = await axios.put(
+      "http://localhost:9000/api/contact",
+      contact.value
+    );
     swal({
-      title: "Good job!",
+      title: "Success",
       text: result.data.message,
       icon: "success",
     });
-    fet();
   } catch (error) {
-    if (!yup) {
-      //frontend err
-      console.log(error);
-      swal({
-        title: error.name,
-        text: error.message,
-        icon: "error",
-      });
-      return;
-    }
-    //backend error
-    console.log(error);
     swal({
       title: error.name,
-      text: error.response.data.error,
+      text:
+        (yup ? error.response.data.error : error.message) ||
+        error.response.data,
       icon: "error",
     });
   }
 };
+
+getUserIds();
 </script>
 <template>
   <div style="display: flex; flex-direction: column; align-items: center">
     <h1>CONTACT INFO</h1>
     <form>
       <label for="userId">User ID</label>
-      <select v-model="contact.userId" @change="fet">
+      <select v-model="contact.userId" @change="getUserId">
         <option disabled value="">Please select your userId</option>
         <option v-for="id in userIds">{{ id }}</option>
       </select>
@@ -127,7 +114,7 @@ const updateContact = async () => {
       <input
         type="submit"
         :value="contactExist ? 'Update' : 'Add'"
-        @click.prevent="contactExist ? updateContact() : handleForm2()"
+        @click.prevent="contactExist ? updateContact() : handleContact()"
       />
     </form>
   </div>
