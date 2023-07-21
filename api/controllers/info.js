@@ -1,6 +1,6 @@
 const knex = require("../database/knex");
 const Joi = require("joi");
-const _ = require('lodash')
+const _ = require("lodash");
 
 const infoSchema = Joi.object({
   name: Joi.string().min(3).required(),
@@ -15,16 +15,18 @@ const contactSchema = Joi.object({
 });
 
 const getBasicInfos = async (ctx) => {
-  const infos = await knex("basic_info").select('id', 'name', 'age', 'address');
+  const infos = await knex("basic_info").select("id", "name", "age", "address");
   ctx.body = infos;
 };
 
 const getInfos = async (ctx) => {
   try {
-    const mergeInfos = await knex("basic_info").select('name', 'age', 'address', 'email', 'phone',).join("contact_info", {
-      "basic_info.id": "contact_info.userId",
+    const infos = await knex("basic_info");
+    const contacts = await knex("contact_info");
+    const merge = _.map(contacts, function (item) {
+      return _.merge(item, _.find(infos, { 'id': item.userId }));
     });
-    ctx.body = mergeInfos;
+    ctx.body = { infos: infos, contacts: contacts, merge: merge };
   } catch (error) {
     ctx.status = 500;
     ctx.body = error;
