@@ -57,7 +57,7 @@ fetchInfos();
             <th>EMAIL</th>
             <th>PHONE</th>
           </tr>
-          <tr v-for="info, no in infos" :key="info.id">
+          <tr v-for="(info, no) in infos" :key="info.id">
             <td>{{ ++no }}</td>
             <td>{{ info.name }}</td>
             <td>{{ info.age }}</td>
@@ -71,32 +71,6 @@ fetchInfos();
   </div>
 </template>
 
-<style scoped>
-#datas {
-  font-family: Arial, Helvetica, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-}
-
-#datas td,
-#datas th {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
-
-#datas tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-
-#datas tr:hover {
-  background-color: #ddd;
-}
-
-#datas th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
-  background-color: #04aa6d;
-  color: white;
-}
+<style scoped lang="scss">
+@import '../styles/home.scss'
 </style>
