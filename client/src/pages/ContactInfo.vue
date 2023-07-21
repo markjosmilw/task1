@@ -5,7 +5,7 @@ import { object, string } from "yup";
 import swal from "sweetalert";
 
 const contact = ref({
-  userId: "0",
+  userId: "",
   email: "",
   phone: "",
 });
@@ -79,8 +79,36 @@ const handleForm2 = async () => {
   }
 };
 fetchBasic();
-const updateForm2 = async () => {
-  console.log("updated contacts");
+const updateContact = async () => {
+  let yup;
+  try {
+    yup = await contactSchema.validate(contact.value);
+    const result = await axios.put("http://localhost:9000/api/contact", contact.value);
+    swal({
+      title: "Good job!",
+      text: result.data.message,
+      icon: "success",
+    });
+    fet();
+  } catch (error) {
+    if (!yup) {
+      //frontend err
+      console.log(error);
+      swal({
+        title: error.name,
+        text: error.message,
+        icon: "error",
+      });
+      return;
+    }
+    //backend error
+    console.log(error);
+    swal({
+      title: error.name,
+      text: error.response.data.error,
+      icon: "error",
+    });
+  }
 };
 </script>
 <template>
@@ -89,7 +117,7 @@ const updateForm2 = async () => {
     <form>
       <label for="userId">User ID</label>
       <select v-model="contact.userId" @change="fet">
-        <option disabled value="">Please select one userId</option>
+        <option disabled value="">Please select your userId</option>
         <option v-for="id in userIds">{{ id }}</option>
       </select>
       <label for="email">Email</label>
@@ -99,7 +127,7 @@ const updateForm2 = async () => {
       <input
         type="submit"
         :value="contactExist ? 'Update' : 'Add'"
-        @click.prevent="contactExist ? updateForm2() : handleForm2()"
+        @click.prevent="contactExist ? updateContact() : handleForm2()"
       />
     </form>
   </div>

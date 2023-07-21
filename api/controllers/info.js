@@ -37,7 +37,6 @@ const findContact = async (ctx) => {
       .first();
     ctx.body = row;
   } catch (error) {
-    console.log(error);
     ctx.status = 500;
     ctx.body = { error: error };
   }
@@ -51,11 +50,10 @@ const postInfo = async (ctx) => {
       age: ctx.request.body.age,
       address: ctx.request.body.address,
     });
-    console.log(id);
-    ctx.body = { message: "Data received", userId: id };
+    ctx.body = { message: `Data received. Your userId is: ${id}`, userId: id };
   } catch (error) {
     ctx.status = 500;
-    if (!error.code) return (ctx.body = {error: error.details[0].message});
+    if (!error.code) return (ctx.body = { error: error.details[0].message });
     console.log(error.sqlMessage);
     ctx.body = { error: error.sqlMessage };
   }
@@ -77,10 +75,25 @@ const postContact = async (ctx) => {
   }
 };
 
+const updateContact = async (ctx) => {
+  try {
+    await contactSchema.validateAsync(ctx.request.body);
+    await knex("contact_info")
+      .where("userId", ctx.request.body.userId)
+      .update({ email: ctx.request.body.email, phone: ctx.request.body.phone });
+    ctx.body = { message: "Contact updated succesfully" };
+  } catch (error) {
+    ctx.status = 500;
+    if (!error.code) return (ctx.body = { error: error.details[0].message });
+    ctx.body = { error: error.sqlMessage };
+  }
+};
+
 module.exports = {
   getInfos,
   postInfo,
   postContact,
   getBasicInfos,
   findContact,
+  updateContact,
 };

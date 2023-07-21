@@ -3,12 +3,16 @@ import { ref } from "vue";
 import axios from "axios";
 import { object, string, number } from "yup";
 import swal from "sweetalert";
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const info = ref({
   name: "",
   age: "",
   address: "",
 });
+
 const infoSchema = object({
   name: string().required().min(3, "name must be atleast 3 characters"),
   age: number()
@@ -19,32 +23,21 @@ const infoSchema = object({
   address: string().required().min(5, "address must be atleast 5 characters"),
 });
 
-const handleForm1 = async () => {
-  let er;
+const handleInfo = async () => {
+  let yup;
   try {
-    er = await infoSchema.validate(info.value);
+    yup = await infoSchema.validate(info.value);
     const res = await axios.post("http://localhost:9000/api/infos", info.value);
     swal({
       title: "Success",
       text: res.data.message,
       icon: "success",
     });
+    router.push('/contact');
   } catch (error) {
-    if (!er) {
-      //frontend err
-      console.log('frontend error');
-      swal({
-        title: error.name,
-        text: error.message,
-        icon: "error",
-      });
-      return;
-    }
-    //backend error
-    console.log('backend error');
     swal({
       title: error.name,
-      text: error.response.data.error,
+      text: (yup ? error.response.data.error : error.message) || "404 not found",
       icon: "error",
     });
   }
@@ -60,7 +53,7 @@ const handleForm1 = async () => {
       <input v-model="info.age" type="number" placeholder="Your age.." />
       <label for="address">Address</label>
       <input v-model="info.address" type="text" placeholder="Your address.." />
-      <input type="submit" value="Submit" @click.prevent="handleForm1" />
+      <input type="submit" value="Submit" @click.prevent="handleInfo" />
     </form>
   </div>
 </template>
