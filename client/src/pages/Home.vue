@@ -50,15 +50,15 @@ fetchInfos();
         </div>
         <table id="datas">
           <tr>
-            <th>ID</th>
+            <th>NO</th>
             <th>NAME</th>
             <th>AGE</th>
             <th>ADDRESS</th>
             <th>EMAIL</th>
             <th>PHONE</th>
           </tr>
-          <tr v-for="info in infos" :key="info.id">
-            <td>{{ info.id }}</td>
+          <tr v-for="info, no in infos" :key="info.id">
+            <td>{{ ++no }}</td>
             <td>{{ info.name }}</td>
             <td>{{ info.age }}</td>
             <td>{{ info.address }}</td>

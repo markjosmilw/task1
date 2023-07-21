@@ -45,6 +45,7 @@ const handleInfo = async () => {
   }
 };
 </script>
+
 <template>
   <div style="display: flex; flex-direction: column; align-items: center">
     <h1>BASIC INFO</h1>
@@ -55,37 +56,17 @@ const handleInfo = async () => {
       <input v-model="info.age" type="number" placeholder="Your age.." />
       <label for="address">Address</label>
       <input v-model="info.address" type="text" placeholder="Your address.." />
-      <input type="submit" value="Submit" @click.prevent="handleInfo" />
+      <input
+        type="submit"
+        :disabled="!info.name || !info.age || !info.address"
+        :class="info.name && info.age && info.address ? 'd' : ''"
+        value="Submit"
+        @click.prevent="handleInfo"
+      />
     </form>
   </div>
 </template>
 
-<style scope="">
-input[type="text"],
-input[type="number"],
-input[type="email"],
-select {
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-input[type="submit"] {
-  width: 100%;
-  background-color: #4caf50;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-input[type="submit"]:hover {
-  background-color: #45a049;
-}
+<style scoped lang="scss">
+@import '../styles/form.scss'
 </style>

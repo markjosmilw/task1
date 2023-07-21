@@ -14,13 +14,13 @@ const contactSchema = Joi.object({
 });
 
 const getBasicInfos = async (ctx) => {
-  const infos = await knex("basic_info");
+  const infos = await knex("basic_info").select('id', 'name', 'age', 'address');
   ctx.body = infos;
 };
 
 const getInfos = async (ctx) => {
   try {
-    const mergeInfos = await knex("basic_info").join("contact_info", {
+    const mergeInfos = await knex("basic_info").select('name', 'age', 'address', 'email', 'phone',).join("contact_info", {
       "basic_info.id": "contact_info.userId",
     });
     ctx.body = mergeInfos;

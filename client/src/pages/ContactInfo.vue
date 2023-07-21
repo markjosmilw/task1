@@ -98,6 +98,7 @@ const updateContact = async () => {
 
 getUserIds();
 </script>
+
 <template>
   <div style="display: flex; flex-direction: column; align-items: center">
     <h1>CONTACT INFO</h1>
@@ -113,39 +114,15 @@ getUserIds();
       <input v-model="contact.phone" type="number" placeholder="Your phone.." />
       <input
         type="submit"
-        :value="contactExist ? 'Update' : 'Add'"
+        :disabled="!contact.email || !contact.phone"
+        :class="contact.email && contact.phone ? 'd' : ''"
+        :value="contactExist?'Update':'Add'"
         @click.prevent="contactExist ? updateContact() : handleContact()"
       />
     </form>
   </div>
 </template>
 
-<style scope="">
-input[type="text"],
-input[type="number"],
-input[type="email"],
-select {
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-input[type="submit"] {
-  width: 100%;
-  background-color: #4caf50;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-input[type="submit"]:hover {
-  background-color: #45a049;
-}
+<style scoped lang="scss">
+@import '../styles/form.scss'
 </style>
