@@ -1,5 +1,6 @@
 const knex = require("../database/knex");
 const Joi = require("joi");
+const _ = require('lodash')
 
 const infoSchema = Joi.object({
   name: Joi.string().min(3).required(),
