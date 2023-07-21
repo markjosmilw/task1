@@ -4,6 +4,7 @@ import axios from "axios";
 
 const infos = ref([]);
 const searchQuery = ref("");
+
 const fetchInfos = async () => {
   try {
     const response = await axios.get("http://localhost:9000/api/infos");
@@ -12,6 +13,7 @@ const fetchInfos = async () => {
     console.log(error);
   }
 };
+
 const handleSearch = () => {
   const search = searchQuery.value.toLowerCase();
   if (search === "") {
@@ -25,10 +27,11 @@ const handleSearch = () => {
     );
   }
 };
+
 fetchInfos();
 </script>
 <template>
-  <div style="display: flex; flex-direction: column; align-items: center;">
+  <div style="display: flex; flex-direction: column; align-items: center">
     <h1>HOME</h1>
     <div style="display: flex">
       <div>
@@ -42,15 +45,10 @@ fetchInfos();
           <h1>Data table</h1>
           <div>
             <label for="searchInput">Search:</label>
-            <input
-              type="text"
-              id="searchInput"
-              v-model="searchQuery"
-              @input="handleSearch"
-            />
+            <input type="text" v-model="searchQuery" @input="handleSearch" />
           </div>
         </div>
-        <table id="customers">
+        <table id="datas">
           <tr>
             <th>ID</th>
             <th>NAME</th>
@@ -74,27 +72,27 @@ fetchInfos();
 </template>
 
 <style scoped>
-#customers {
+#datas {
   font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
   width: 100%;
 }
 
-#customers td,
-#customers th {
+#datas td,
+#datas th {
   border: 1px solid #ddd;
   padding: 8px;
 }
 
-#customers tr:nth-child(even) {
+#datas tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 
-#customers tr:hover {
+#datas tr:hover {
   background-color: #ddd;
 }
 
-#customers th {
+#datas th {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;

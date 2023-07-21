@@ -19,7 +19,7 @@ const contactSchema = object({
     .required()
     .min(10, `"email" length must be at least 10 characters long`),
   phone: string()
-    .matches(phoneRegex, "Invalid phone")
+    .matches(phoneRegex, "Invalid phone number")
     .required("Phone is required"),
 });
 
@@ -104,7 +104,7 @@ getUserIds();
     <form>
       <label for="userId">User ID</label>
       <select v-model="contact.userId" @change="getUserId">
-        <option disabled value="">Please select your userId</option>
+        <option disabled value="">Please select your User ID</option>
         <option v-for="id in userIds">{{ id }}</option>
       </select>
       <label for="email">Email</label>
