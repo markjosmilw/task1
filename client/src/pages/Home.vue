@@ -1,7 +1,11 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
+<<<<<<< HEAD
 import { onMounted } from 'vue'
+=======
+import _ from "lodash";
+>>>>>>> b11382dc135b50919fc7ac137d22f17e80362705
 
 onMounted(() => {
   fetch();
@@ -62,11 +66,15 @@ const handleSearch = () => {
             <th>EMAIL</th>
             <th>PHONE</th>
           </tr>
+<<<<<<< HEAD
           <tr v-for="(info, index) in mergedInfos" :key="info.id">
+=======
+          <tr v-for="(info, index) in infos" :key="index">
+>>>>>>> b11382dc135b50919fc7ac137d22f17e80362705
             <td>{{ ++index }}</td>
-            <td>{{ info.name }}</td>
+            <td>{{ _.capitalize(info.name) }}</td>
             <td>{{ info.age }}</td>
-            <td>{{ info.address }}</td>
+            <td>{{ _.capitalize(info.address) }}</td>
             <td>{{ info.email }}</td>
             <td>{{ info.phone }}</td>
           </tr>
@@ -77,5 +85,5 @@ const handleSearch = () => {
 </template>
 
 <style scoped lang="scss">
-@import '../styles/home.scss'
+@import "../styles/home.scss";
 </style>

@@ -14,13 +14,13 @@ const info = ref({
 });
 
 const infoSchema = object({
-  name: string().required().min(3, "name must be atleast 3 characters"),
+  name: string().required().min(3, "Your name must be atleast 3 characters long."),
   age: number()
     .required()
     .positive()
     .integer()
-    .max(120, "please enter your real age"),
-  address: string().required().min(5, "address must be atleast 5 characters"),
+    .max(120, "Please enter your real age."),
+  address: string().required().min(5, "Address must be atleast 5 characters long."),
 });
 
 const handleInfo = async () => {
