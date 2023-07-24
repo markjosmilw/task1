@@ -2,17 +2,17 @@
 import { ref } from "vue";
 import axios from "axios";
 import { object, string } from "yup";
-import { onMounted } from 'vue'
+import { onMounted } from "vue";
 import swal from "sweetalert";
 import _ from "lodash";
 
 onMounted(() => {
   fetch();
-})
+});
 
 const contactExists = ref(false);
 
-const all = ref([])
+const all = ref([]);
 
 const contact = ref({
   userId: "",
@@ -41,8 +41,9 @@ const fetch = async () => {
 };
 
 const getContact = async () => {
+  fetch();
   const cont = _.find(all.value.contacts, {
-    userId: parseInt(contact.value.userId),
+    id: parseInt(contact.value.userId),
   });
   if (!cont) {
     contact.value.email = "";
@@ -69,13 +70,13 @@ const handleContact = async () => {
       icon: "success",
     });
     contactExists.value = !contactExists.value;
-    fetch()
   } catch (error) {
     swal({
       title: error.name,
       text:
         (yup ? error.response.data.error : error.message) ||
-        error.response.data || '404 not found',
+        error.response.data ||
+        "404 not found",
       icon: "error",
     });
   }
@@ -94,7 +95,6 @@ const updateContact = async () => {
       text: result.data.message,
       icon: "success",
     });
-    
   } catch (error) {
     swal({
       title: error.name,
@@ -105,8 +105,6 @@ const updateContact = async () => {
     });
   }
 };
-
-
 </script>
 
 <template>
@@ -114,9 +112,16 @@ const updateContact = async () => {
     <h1>CONTACT INFO</h1>
     <form>
       <label for="userId">Name</label>
-      <select v-model="contact.userId" @change="getContact">
+      <select v-model="contact.userId" @change="getContact()">
         <option disabled value="">Please select your name</option>
-        <option v-for="(info, index) in all.infos" :key="index" :value="info.id">{{ info.name }}</option>
+        <option
+          v-for="(info, index) in all.infos"
+          :key="index"
+          :value="info.id"
+        >
+          {{ info.name }}
+        </option>
+        <!-- <option v-for="(info, index) in all.infos" :key="index" :value="info.userId">{{ info.name }}</option> -->
       </select>
       <label for="email">Email</label>
       <input v-model="contact.email" type="email" placeholder="Your email.." />
