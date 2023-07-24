@@ -20,15 +20,6 @@ const contact = ref({
   phone: "",
 });
 
-const fetch = async () => {
-  try {
-    const response = await axios.get("http://localhost:9000/api/infos");
-    all.value = response.data;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 const phoneRegex = RegExp(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/);
 const contactSchema = object({
   email: string()
@@ -39,6 +30,15 @@ const contactSchema = object({
     .matches(phoneRegex, "Invalid phone number")
     .required("Phone is required"),
 });
+
+const fetch = async () => {
+  try {
+    const response = await axios.get("http://localhost:9000/api/infos");
+    all.value = response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const getContact = async () => {
   const cont = _.find(all.value.contacts, {
