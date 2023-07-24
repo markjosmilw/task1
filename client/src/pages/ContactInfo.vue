@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
-import { object, string } from "yup";
+import { number, object, string } from "yup";
 import swal from "sweetalert";
 import _ from "lodash";
 import { onMounted } from 'vue'
@@ -11,7 +11,6 @@ onMounted(() => {
 })
 
 const contactExists = ref(false);
-
 const all = ref([])
 
 const contact = ref({
@@ -31,13 +30,14 @@ const fetch = async () => {
 
 const phoneRegex = RegExp(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/);
 const contactSchema = object({
+  userId: number().required('required').typeError('Please select your name.'),
   email: string()
-    .email("Must be a valid email")
+    .email("Must be a valid email.")
     .required()
-    .min(10, `"email" length must be at least 10 characters long`),
+    .min(10, `Your "email" length must be at least 10 characters long.`),
   phone: string()
-    .matches(phoneRegex, "Invalid phone number")
-    .required("Phone is required"),
+    .matches(phoneRegex, "Invalid phone number.")
+    .required("Phone is required."),
 });
 
 const getContact = async () => {
@@ -48,7 +48,6 @@ const getContact = async () => {
     contact.value.email = "";
     contact.value.phone = "";
     contactExists.value = false;
-    //dev2
     return;
   }
   contact.value.email = cont.email;
@@ -95,7 +94,7 @@ const updateContact = async () => {
       text: result.data.message,
       icon: "success",
     });
-    
+    fetch()
   } catch (error) {
     swal({
       title: error.name,

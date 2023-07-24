@@ -16,10 +16,20 @@ const contactSchema = Joi.object({
 
 const getInfos = async (ctx) => {
   try {
-    const infos = await knex("basic_info");
-    const contacts = await knex("contact_info");
-    const merge = _.map(contacts, function (item) {
-      return _.merge(item, _.find(infos, { 'id': item.userId }));
+    const infos = await knex("basic_info").select(
+      "id",
+      "name",
+      "age",
+      "address"
+    );
+    const contacts = await knex("contact_info").select(
+      "id",
+      "userId",
+      "email",
+      "phone"
+    );
+    const merge = await knex("basic_info").join("contact_info", {
+      "basic_info.id": "contact_info.userId",
     });
     ctx.body = { infos: infos, contacts: contacts, merge: merge };
   } catch (error) {
@@ -36,7 +46,10 @@ const postInfo = async (ctx) => {
       age: ctx.request.body.age,
       address: ctx.request.body.address,
     });
-    ctx.body = { message: `Data received. Your userId is: ${id}`, userId: id };
+    ctx.body = {
+      message: `Data received. Let's proceed to the next form.`,
+      userId: id,
+    };
   } catch (error) {
     ctx.status = 500;
     if (!error.code) return (ctx.body = { error: error.details[0].message });
@@ -63,8 +76,10 @@ const postContact = async (ctx) => {
 
 const updateContact = async (ctx) => {
   try {
+    console.log(ctx.request.body);
     await contactSchema.validateAsync(ctx.request.body);
     await knex("contact_info")
+      .select("id", "userId", "email", "phone")
       .where("userId", ctx.request.body.userId)
       .update({ email: ctx.request.body.email, phone: ctx.request.body.phone });
     ctx.body = { message: "Contact updated succesfully" };
