@@ -2,9 +2,9 @@
 import { ref } from "vue";
 import axios from "axios";
 import { object, string } from "yup";
+import { onMounted } from 'vue'
 import swal from "sweetalert";
 import _ from "lodash";
-import { onMounted } from 'vue'
 
 onMounted(() => {
   fetch();

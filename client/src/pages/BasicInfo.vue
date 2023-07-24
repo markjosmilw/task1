@@ -2,8 +2,8 @@
 import { ref } from "vue";
 import axios from "axios";
 import { object, string, number } from "yup";
-import swal from "sweetalert";
 import { useRouter } from "vue-router";
+import swal from "sweetalert";
 
 const router = useRouter();
 

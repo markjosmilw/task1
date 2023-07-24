@@ -1,14 +1,19 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
+import { onMounted } from 'vue'
 
-const infos = ref([]);
+onMounted(() => {
+  fetch();
+})
+
+const mergedInfos = ref([]);
 const searchQuery = ref("");
 
-const fetchInfos = async () => {
+const fetch = async () => {
   try {
     const response = await axios.get("http://localhost:9000/api/infos");
-    infos.value = response.data.merge;
+    mergedInfos.value = response.data.merge;
   } catch (error) {
     console.log(error);
   }
@@ -17,9 +22,9 @@ const fetchInfos = async () => {
 const handleSearch = () => {
   const search = searchQuery.value.toLowerCase();
   if (search === "") {
-    fetchInfos();
+    fetch();
   } else {
-    infos.value = infos.value.filter(
+    mergedInfos.value = mergedInfos.value.filter(
       (info) =>
         info.name.toLowerCase().includes(search) ||
         info.address.toLowerCase().includes(search) ||
@@ -28,7 +33,7 @@ const handleSearch = () => {
   }
 };
 
-fetchInfos();
+
 </script>
 <template>
   <div style="display: flex; flex-direction: column; align-items: center">
@@ -57,7 +62,7 @@ fetchInfos();
             <th>EMAIL</th>
             <th>PHONE</th>
           </tr>
-          <tr v-for="(info, index) in infos" :key="info.id">
+          <tr v-for="(info, index) in mergedInfos" :key="info.id">
             <td>{{ ++index }}</td>
             <td>{{ info.name }}</td>
             <td>{{ info.age }}</td>
