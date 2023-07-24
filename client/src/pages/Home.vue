@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
+import _ from 'lodash'
 
 const infos = ref([]);
 const searchQuery = ref("");
@@ -57,9 +58,9 @@ fetchInfos();
             <th>EMAIL</th>
             <th>PHONE</th>
           </tr>
-          <tr v-for="(info, index) in infos" :key="info.id">
+          <tr v-for="(info, index) in infos" :key="index">
             <td>{{ ++index }}</td>
-            <td>{{ info.name }}</td>
+            <td>{{ _.capitalize(info.name)}}</td>
             <td>{{ info.age }}</td>
             <td>{{ info.address }}</td>
             <td>{{ info.email }}</td>
