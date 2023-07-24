@@ -105,8 +105,6 @@ const updateContact = async () => {
     });
   }
 };
-
-
 </script>
 
 <template>
@@ -116,7 +114,7 @@ const updateContact = async () => {
       <label for="userId">Name</label>
       <select v-model="contact.userId" @change="getContact">
         <option disabled value="">Please select your name</option>
-        <option v-for="(info, index) in all.infos" :key="index" :value="info.id">{{ info.name }}</option>
+        <option v-for="(info, index) in all.infos" :key="index" :value="info.id">{{ _.capitalize(info.name) }}</option>
       </select>
       <label for="email">Email</label>
       <input v-model="contact.email" type="email" placeholder="Your email.." />
