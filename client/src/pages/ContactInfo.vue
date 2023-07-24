@@ -48,6 +48,7 @@ const getContact = async () => {
     contact.value.email = "";
     contact.value.phone = "";
     contactExists.value = false;
+    //dev2
     return;
   }
   contact.value.email = cont.email;
