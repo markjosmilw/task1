@@ -23,6 +23,7 @@ const fetch = async () => {
   try {
     const response = await axios.get("http://localhost:9000/api/infos");
     all.value = response.data;
+    console.log(all.value);
   } catch (error) {
     console.log(error);
   }
