@@ -4,12 +4,14 @@ const router = new Router();
 
 router.get('/test', (ctx) => ctx.body = "test ok")
 
-//GET METHOD
+//GET ROUTE
 router.get('/api/infos', getInfos)
 
-//POST METHODS
+//POST ROUTES
 router.post('/api/infos', postInfo)
 router.post('/api/contact', postContact)
+
+//PUT ROUTE
 router.put('/api/contact', updateContact)
 
 module.exports = router;

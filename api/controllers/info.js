@@ -36,7 +36,7 @@ const postInfo = async (ctx) => {
       age: ctx.request.body.age,
       address: ctx.request.body.address,
     });
-    ctx.body = { message: `Data received. Your userId is: ${id}`, userId: id };
+    ctx.body = { message: `Data received. Let's proceed to contact form.`, userId: id };
   } catch (error) {
     ctx.status = 500;
     if (!error.code) return (ctx.body = { error: error.details[0].message });
