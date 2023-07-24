@@ -101,7 +101,7 @@ const updateContact = async () => {
       title: error.name,
       text:
         (yup ? error.response.data.error : error.message) ||
-        error.response.data,
+        error.response.data || "404 not found",
       icon: "error",
     });
   }
