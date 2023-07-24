@@ -1,12 +1,8 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
-<<<<<<< HEAD
 import { object, string } from "yup";
 import { onMounted } from "vue";
-=======
-import { number, object, string } from "yup";
->>>>>>> b11382dc135b50919fc7ac137d22f17e80362705
 import swal from "sweetalert";
 import _ from "lodash";
 
@@ -15,12 +11,8 @@ onMounted(() => {
 });
 
 const contactExists = ref(false);
-<<<<<<< HEAD
 
 const all = ref([]);
-=======
-const all = ref([])
->>>>>>> b11382dc135b50919fc7ac137d22f17e80362705
 
 const contact = ref({
   userId: "",
@@ -30,7 +22,7 @@ const contact = ref({
 
 const phoneRegex = RegExp(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/);
 const contactSchema = object({
-  userId: number().required('required').typeError('Please select your name.'),
+  userId: number().required("required").typeError("Please select your name."),
   email: string()
     .email("Must be a valid email.")
     .required()
@@ -104,10 +96,6 @@ const updateContact = async () => {
       text: result.data.message,
       icon: "success",
     });
-<<<<<<< HEAD
-=======
-    fetch()
->>>>>>> b11382dc135b50919fc7ac137d22f17e80362705
   } catch (error) {
     swal({
       title: error.name,

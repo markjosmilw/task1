@@ -1,15 +1,12 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
-<<<<<<< HEAD
-import { onMounted } from 'vue'
-=======
-import _ from "lodash";
->>>>>>> b11382dc135b50919fc7ac137d22f17e80362705
+import { onMounted } from "vue";
+import _ from 'lodash'
 
 onMounted(() => {
   fetch();
-})
+});
 
 const mergedInfos = ref([]);
 const searchQuery = ref("");
@@ -36,8 +33,6 @@ const handleSearch = () => {
     );
   }
 };
-
-
 </script>
 <template>
   <div style="display: flex; flex-direction: column; align-items: center">
@@ -66,11 +61,7 @@ const handleSearch = () => {
             <th>EMAIL</th>
             <th>PHONE</th>
           </tr>
-<<<<<<< HEAD
           <tr v-for="(info, index) in mergedInfos" :key="info.id">
-=======
-          <tr v-for="(info, index) in infos" :key="index">
->>>>>>> b11382dc135b50919fc7ac137d22f17e80362705
             <td>{{ ++index }}</td>
             <td>{{ _.capitalize(info.name) }}</td>
             <td>{{ info.age }}</td>

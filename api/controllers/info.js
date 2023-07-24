@@ -16,27 +16,10 @@ const contactSchema = Joi.object({
 
 const getInfos = async (ctx) => {
   try {
-<<<<<<< HEAD
     const infos = await knex("basic_info").select('id', 'name', 'age', 'address')
     const contacts = await knex("contact_info").select('id', 'userId', 'email', 'phone');
     const merge = _.map(infos, (item) => {
       return _.merge(item, _.find(contacts, { 'userId': item.id }));
-=======
-    const infos = await knex("basic_info").select(
-      "id",
-      "name",
-      "age",
-      "address"
-    );
-    const contacts = await knex("contact_info").select(
-      "id",
-      "userId",
-      "email",
-      "phone"
-    );
-    const merge = await knex("basic_info").join("contact_info", {
-      "basic_info.id": "contact_info.userId",
->>>>>>> b11382dc135b50919fc7ac137d22f17e80362705
     });
     const filtered = _.filter(merge, 'email', 'phone')
     ctx.body = { infos: infos, contacts: contacts, merge: filtered };
@@ -54,14 +37,7 @@ const postInfo = async (ctx) => {
       age: ctx.request.body.age,
       address: ctx.request.body.address,
     });
-<<<<<<< HEAD
     ctx.body = { message: `Data received. Let's proceed to the next form.`, userId: id };
-=======
-    ctx.body = {
-      message: `Data received. Let's proceed to the next form.`,
-      userId: id,
-    };
->>>>>>> b11382dc135b50919fc7ac137d22f17e80362705
   } catch (error) {
     ctx.status = 500;
     if (!error.code) return (ctx.body = { error: error.details[0].message });
@@ -90,12 +66,7 @@ const updateContact = async (ctx) => {
   try {
     console.log(ctx.request.body);
     await contactSchema.validateAsync(ctx.request.body);
-<<<<<<< HEAD
     await knex("contact_info").select('id', 'userId', 'email', 'phone')
-=======
-    await knex("contact_info")
-      .select("id", "userId", "email", "phone")
->>>>>>> b11382dc135b50919fc7ac137d22f17e80362705
       .where("userId", ctx.request.body.userId)
       .update({ email: ctx.request.body.email, phone: ctx.request.body.phone });
     ctx.body = { message: "Contact updated succesfully" };
