@@ -1,13 +1,11 @@
 const Router = require('koa-router');
-const { getInfos, postInfo, postContact, getBasicInfos, findContact, updateContact } = require('../controllers/info');
+const { getInfos, postInfo, postContact, updateContact } = require('../controllers/info');
 const router = new Router();
 
 router.get('/test', (ctx) => ctx.body = "test ok")
 
-//GET METHOD/S
+//GET METHOD
 router.get('/api/infos', getInfos)
-router.get('/api/basic', getBasicInfos)
-router.get('/api/contact/:userId', findContact)
 
 //POST METHODS
 router.post('/api/infos', postInfo)

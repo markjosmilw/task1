@@ -14,11 +14,6 @@ const contactSchema = Joi.object({
   userId: Joi.number().min(1).required(),
 });
 
-const getBasicInfos = async (ctx) => {
-  const infos = await knex("basic_info").select("id", "name", "age", "address");
-  ctx.body = infos;
-};
-
 const getInfos = async (ctx) => {
   try {
     const infos = await knex("basic_info");
@@ -30,18 +25,6 @@ const getInfos = async (ctx) => {
   } catch (error) {
     ctx.status = 500;
     ctx.body = error;
-  }
-};
-
-const findContact = async (ctx) => {
-  try {
-    const row = await knex("contact_info")
-      .where("userId", ctx.request.params.userId)
-      .first();
-    ctx.body = row;
-  } catch (error) {
-    ctx.status = 500;
-    ctx.body = { error: error };
   }
 };
 
@@ -96,7 +79,5 @@ module.exports = {
   getInfos,
   postInfo,
   postContact,
-  getBasicInfos,
-  findContact,
   updateContact,
 };

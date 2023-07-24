@@ -4,32 +4,30 @@ import axios from "axios";
 import { object, string } from "yup";
 import swal from "sweetalert";
 import _ from "lodash";
+import { onMounted } from 'vue'
 
-const contactExist = ref(false);
+onMounted(() => {
+  fetch();
+})
 
-const contacts = ref([]);
+const contactExists = ref(false);
 
-const userIds = ref([]);
+const all = ref([])
+
 const contact = ref({
   userId: "",
   email: "",
   phone: "",
 });
 
-const infos = ref({});
-
 const fetch = async () => {
   try {
     const response = await axios.get("http://localhost:9000/api/infos");
-    contacts.value = response.data.contacts;
-    infos.value = response.data.infos;
-    const pp = response.data.infos.map((info) => {
-      return info.id;
-    });
-    userIds.value = pp;
-  } catch (error) {}
+    all.value = response.data;
+  } catch (error) {
+    console.log(error);
+  }
 };
-fetch();
 
 const phoneRegex = RegExp(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/);
 const contactSchema = object({
@@ -43,19 +41,18 @@ const contactSchema = object({
 });
 
 const getContact = async () => {
-  contact.value.userId = infos.value.id.id
-  const cont = _.find(contacts.value, {
+  const cont = _.find(all.value.contacts, {
     userId: parseInt(contact.value.userId),
   });
   if (!cont) {
     contact.value.email = "";
     contact.value.phone = "";
-    contactExist.value = false;
+    contactExists.value = false;
     return;
   }
   contact.value.email = cont.email;
   contact.value.phone = cont.phone;
-  contactExist.value = true;
+  contactExists.value = true;
 };
 
 const handleContact = async () => {
@@ -67,19 +64,18 @@ const handleContact = async () => {
       contact.value
     );
     swal({
-      title: "Good job!",
+      title: "Success",
       text: result.data.message,
       icon: "success",
     });
-    contactExist.value = !contactExist.value;
-    console.log(contacts.value);
-    
+    contactExists.value = !contactExists.value;
+    fetch()
   } catch (error) {
     swal({
       title: error.name,
       text:
         (yup ? error.response.data.error : error.message) ||
-        error.response.data,
+        error.response.data || '404 not found',
       icon: "error",
     });
   }
@@ -109,6 +105,8 @@ const updateContact = async () => {
     });
   }
 };
+
+
 </script>
 
 <template>
@@ -116,9 +114,9 @@ const updateContact = async () => {
     <h1>CONTACT INFO</h1>
     <form>
       <label for="userId">Name</label>
-      <select v-model="infos.id" @change="getContact">
+      <select v-model="contact.userId" @change="getContact">
         <option disabled value="">Please select your name</option>
-        <option v-for="id in infos" v-bind:value="id">{{ id.name }}</option>
+        <option v-for="(info, index) in all.infos" :key="index" :value="info.id">{{ info.name }}</option>
       </select>
       <label for="email">Email</label>
       <input v-model="contact.email" type="email" placeholder="Your email.." />
@@ -128,8 +126,8 @@ const updateContact = async () => {
         type="submit"
         :disabled="!contact.email || !contact.phone"
         :class="contact.email && contact.phone ? 'd' : ''"
-        :value="contactExist ? 'Update' : 'Add'"
-        @click.prevent="contactExist ? updateContact() : handleContact()"
+        :value="contactExists ? 'Update' : 'Add'"
+        @click.prevent="contactExists ? updateContact() : handleContact()"
       />
     </form>
   </div>
