@@ -27,7 +27,11 @@ const handleInfo = async () => {
   let yup;
   try {
     yup = await infoSchema.validate(info.value);
-    const res = await axios.post("http://localhost:9000/api/infos", info.value);
+    const res = await axios.post("http://localhost:9000/api/infos", {
+      name: info.value.name,
+      age: info.value.age,
+      address: info.value.address,
+    });
     swal({
       title: "Success",
       text: res.data.message,

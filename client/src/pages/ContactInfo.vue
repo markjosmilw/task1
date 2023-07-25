@@ -110,7 +110,6 @@ const updateContact = async () => {
 </script>
 
 <template>
-  {{ _.sortBy(all.infos, _.lowerCase(["name"])) }}
   <div style="display: flex; flex-direction: column; align-items: center">
     <h1>CONTACT INFO</h1>
     <form>
