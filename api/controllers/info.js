@@ -53,7 +53,6 @@ const postInfo = async (ctx) => {
   } catch (error) {
     ctx.status = 500;
     if (!error.code) return (ctx.body = { error: error.details[0].message });
-    console.log(error.sqlMessage);
     ctx.body = { error: error.sqlMessage };
   }
 };
@@ -76,7 +75,6 @@ const postContact = async (ctx) => {
 
 const updateContact = async (ctx) => {
   try {
-    console.log(ctx.request.body);
     await contactSchema.validateAsync(ctx.request.body);
     await knex("contact_info")
       .select("id", "userId", "email", "phone")

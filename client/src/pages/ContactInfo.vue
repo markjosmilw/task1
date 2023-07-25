@@ -4,14 +4,14 @@ import axios from "axios";
 import { number, object, string } from "yup";
 import swal from "sweetalert";
 import _ from "lodash";
-import { onMounted } from 'vue'
+import { onMounted } from "vue";
 
 onMounted(() => {
   fetch();
-})
+});
 
 const contactExists = ref(false);
-const all = ref([])
+const all = ref([]);
 
 const contact = ref({
   userId: "",
@@ -23,7 +23,6 @@ const fetch = async () => {
   try {
     const response = await axios.get("http://localhost:9000/api/infos");
     all.value = response.data;
-    console.log(all.value);
   } catch (error) {
     console.log(error);
   }
@@ -31,7 +30,7 @@ const fetch = async () => {
 
 const phoneRegex = RegExp(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/);
 const contactSchema = object({
-  userId: number().required('required').typeError('Please select your name.'),
+  userId: number().required("required").typeError("Please select your name."),
   email: string()
     .email("Must be a valid email.")
     .required()
@@ -70,13 +69,14 @@ const handleContact = async () => {
       icon: "success",
     });
     contactExists.value = !contactExists.value;
-    fetch()
+    fetch();
   } catch (error) {
     swal({
       title: error.name,
       text:
         (yup ? error.response.data.error : error.message) ||
-        error.response.data || '404 not found',
+        error.response.data ||
+        "404 not found",
       icon: "error",
     });
   }
@@ -95,13 +95,14 @@ const updateContact = async () => {
       text: result.data.message,
       icon: "success",
     });
-    fetch()
+    fetch();
   } catch (error) {
     swal({
       title: error.name,
       text:
         (yup ? error.response.data.error : error.message) ||
-        error.response.data || "404 not found",
+        error.response.data ||
+        "404 not found",
       icon: "error",
     });
   }
@@ -109,13 +110,20 @@ const updateContact = async () => {
 </script>
 
 <template>
+  {{ _.sortBy(all.infos, _.lowerCase(["name"])) }}
   <div style="display: flex; flex-direction: column; align-items: center">
     <h1>CONTACT INFO</h1>
     <form>
       <label for="userId">Name</label>
       <select v-model="contact.userId" @change="getContact">
         <option disabled value="">Please select your name</option>
-        <option v-for="(info, index) in all.infos" :key="index" :value="info.id">{{ _.capitalize(info.name) }}</option>
+        <option
+          v-for="(info, index) in _.sortBy(all.infos, ['name'])"
+          :key="index"
+          :value="info.id"
+        >
+          {{ _.capitalize(info.name) }}
+        </option>
       </select>
       <label for="email">Email</label>
       <input v-model="contact.email" type="email" placeholder="Your email.." />

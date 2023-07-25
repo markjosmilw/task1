@@ -2,11 +2,16 @@
 import { ref } from "vue";
 import axios from "axios";
 import _ from "lodash";
+import { onMounted } from "vue";
+
+onMounted(() => {
+  fetch();
+});
 
 const infos = ref([]);
 const searchQuery = ref("");
 
-const fetchInfos = async () => {
+const fetch = async () => {
   try {
     const response = await axios.get("http://localhost:9000/api/infos");
     infos.value = response.data.merge;
@@ -18,7 +23,7 @@ const fetchInfos = async () => {
 const handleSearch = () => {
   const search = searchQuery.value.toLowerCase();
   if (search === "") {
-    fetchInfos();
+    fetch();
   } else {
     infos.value = infos.value.filter(
       (info) =>
@@ -28,8 +33,6 @@ const handleSearch = () => {
     );
   }
 };
-
-fetchInfos();
 </script>
 <template>
   <div style="display: flex; flex-direction: column; align-items: center">
@@ -62,7 +65,7 @@ fetchInfos();
             <td>{{ ++index }}</td>
             <td>{{ _.capitalize(info.name) }}</td>
             <td>{{ info.age }}</td>
-            <td>{{ _.capitalize(info.address) }}</td>
+            <td>{{ _.truncate(_.capitalize(info.address)) }}</td>
             <td>{{ info.email }}</td>
             <td>{{ info.phone }}</td>
           </tr>
