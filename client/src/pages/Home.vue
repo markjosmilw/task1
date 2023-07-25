@@ -3,6 +3,7 @@ import { ref } from "vue";
 import axios from "axios";
 import _ from "lodash";
 import { onMounted } from "vue";
+import swal from "sweetalert";
 
 onMounted(() => {
   fetch();
@@ -33,6 +34,19 @@ const handleSearch = () => {
     );
   }
 };
+
+const handleDelete = async (info) => {
+  const e = await swal("Are you sure you want to delete this row?", {
+    buttons: ["no", "yes"],
+  });
+  if (e) {
+    swal(
+      "Deleted!",
+      `You successfully deleted userId: ${info.userId}!`,
+      "success"
+    );
+  }
+};
 </script>
 <template>
   <div style="display: flex; flex-direction: column; align-items: center">
@@ -60,6 +74,7 @@ const handleSearch = () => {
             <th>ADDRESS</th>
             <th>EMAIL</th>
             <th>PHONE</th>
+            <th>Action</th>
           </tr>
           <tr v-for="(info, index) in infos" :key="index">
             <td>{{ ++index }}</td>
@@ -68,6 +83,7 @@ const handleSearch = () => {
             <td>{{ _.truncate(_.capitalize(info.address)) }}</td>
             <td>{{ info.email }}</td>
             <td>{{ info.phone }}</td>
+            <td><a @click="handleDelete(info)" style="cursor: pointer; color: rgb(230, 27, 27)">Delete</a></td>
           </tr>
         </table>
       </div>
