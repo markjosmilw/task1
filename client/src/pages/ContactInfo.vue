@@ -72,7 +72,7 @@ const handleContact = async () => {
     fetch();
   } catch (error) {
     swal({
-      title: error.name.split(/(?=[A-Z])/).join(' '),
+      title: error.name.split(/(?=[A-Z])/).join(" "),
       text:
         (yup ? error.response.data.error : error.message) ||
         error.response.data ||
@@ -98,7 +98,7 @@ const updateContact = async () => {
     fetch();
   } catch (error) {
     swal({
-      title: error.name.split(/(?=[A-Z])/).join(' '),
+      title: error.name.split(/(?=[A-Z])/).join(" "),
       text:
         (yup ? error.response.data.error : error.message) ||
         error.response.data ||

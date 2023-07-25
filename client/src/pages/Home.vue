@@ -48,7 +48,7 @@ const handleSearch = () => {
         >
           <h1>Data table</h1>
           <div>
-            <label for="searchInput">Search:</label>
+            <label for="searchInput">&#x1F50E;&#xFE0E;Search:</label>
             <input type="text" v-model="searchQuery" @input="handleSearch" />
           </div>
         </div>

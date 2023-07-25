@@ -46,7 +46,7 @@ const postInfo = async (ctx) => {
       address: ctx.request.body.address,
     });
     ctx.body = {
-      message: `Data received. Let's proceed to the next form, ${ctx.request.body.name}.`,
+      message: `Data received. Let's proceed to the next form.`,
       userId: id,
     };
   } catch (error) {
