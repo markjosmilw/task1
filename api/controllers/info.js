@@ -1,6 +1,5 @@
 const knex = require("../database/knex");
 const Joi = require("joi");
-const _ = require("lodash");
 
 const infoSchema = Joi.object({
   name: Joi.string().min(3).required(),
@@ -47,7 +46,7 @@ const postInfo = async (ctx) => {
       address: ctx.request.body.address,
     });
     ctx.body = {
-      message: `Data received. Let's proceed to the next form.`,
+      message: `Data received. Let's proceed to the next form, ${ctx.request.body.name}.`,
       userId: id,
     };
   } catch (error) {

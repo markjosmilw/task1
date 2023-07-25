@@ -72,7 +72,7 @@ const handleContact = async () => {
     fetch();
   } catch (error) {
     swal({
-      title: error.name,
+      title: error.name.split(/(?=[A-Z])/).join(' '),
       text:
         (yup ? error.response.data.error : error.message) ||
         error.response.data ||
@@ -98,7 +98,7 @@ const updateContact = async () => {
     fetch();
   } catch (error) {
     swal({
-      title: error.name,
+      title: error.name.split(/(?=[A-Z])/).join(' '),
       text:
         (yup ? error.response.data.error : error.message) ||
         error.response.data ||
@@ -117,7 +117,7 @@ const updateContact = async () => {
       <select v-model="contact.userId" @change="getContact">
         <option disabled value="">Please select your name</option>
         <option
-          v-for="(info, index) in _.sortBy(all.infos, ['name'])"
+          v-for="(info, index) in all.infos"
           :key="index"
           :value="info.id"
         >
