@@ -11,6 +11,7 @@ onMounted(() => {
 
 const infos = ref([]);
 const searchQuery = ref("");
+const userId = ref("");
 
 const fetch = async () => {
   try {
@@ -36,10 +37,17 @@ const handleSearch = () => {
 };
 
 const handleDelete = async (info) => {
+  userId.value = info.userId;
   const e = await swal("Are you sure you want to delete this row?", {
     buttons: ["no", "yes"],
   });
   if (e) {
+    console.log(info.userId.toString());
+    const res = await axios.delete(
+      "http://localhost:9000/api/infos",
+      {deleteUserId: userId.value}
+    );
+    console.log(res);
     swal(
       "Deleted!",
       `You successfully deleted userId: ${info.userId}!`,
@@ -83,7 +91,13 @@ const handleDelete = async (info) => {
             <td>{{ _.truncate(_.capitalize(info.address)) }}</td>
             <td>{{ info.email }}</td>
             <td>{{ info.phone }}</td>
-            <td><a @click="handleDelete(info)" style="cursor: pointer; color: rgb(230, 27, 27)">Delete</a></td>
+            <td>
+              <a
+                @click="handleDelete(info)"
+                style="cursor: pointer; color: rgb(230, 27, 27)"
+                >Delete</a
+              >
+            </td>
           </tr>
         </table>
       </div>
