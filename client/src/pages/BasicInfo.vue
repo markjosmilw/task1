@@ -2,9 +2,9 @@
 import { ref } from "vue";
 import axios from "axios";
 import { object, string, number } from "yup";
-import swal from "sweetalert";
 import { useRouter } from "vue-router";
 import _ from "lodash";
+import useSwal from "../composables/useSwal";
 
 const router = useRouter();
 
@@ -17,7 +17,7 @@ const info = ref({
 const infoSchema = object({
   name: string()
     .required()
-    .min(300, "Your name must be atleast 3 characters long."),
+    .min(3, "Your name must be atleast 3 characters long."),
   age: number()
     .required()
     .positive()
@@ -37,21 +37,10 @@ const handleInfo = async () => {
       age: info.value.age,
       address: _.lowerCase(info.value.address),
     });
-    swal({
-      title: "Success",
-      text: res.data.message,
-      icon: "success",
-    });
+    useSwal(res.data.message);
     router.push("/contact");
   } catch (error) {
-    swal({
-      title: error.name,
-      text:
-        (yup ? error.response.data.error : error.message) ||
-        error.response.data ||
-        "Some error happened",
-      icon: "error",
-    });
+    useSwal(yup ? error.response.data.error : error.message, error.name);
   }
 };
 </script>

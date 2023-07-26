@@ -2,9 +2,9 @@
 import { ref } from "vue";
 import axios from "axios";
 import { number, object, string } from "yup";
-import swal from "sweetalert";
 import _ from "lodash";
 import { onMounted } from "vue";
+import useSwal from "../composables/useSwal";
 
 onMounted(() => {
   fetch();
@@ -30,7 +30,7 @@ const fetch = async () => {
 
 const phoneRegex = RegExp(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/);
 const contactSchema = object({
-  userId: number().required("required").typeError("Please select your name."),
+  userId: number().required().typeError("Please select your name."),
   email: string()
     .email("Must be a valid email.")
     .required()
@@ -63,22 +63,11 @@ const handleContact = async () => {
       "http://localhost:9000/api/contact",
       contact.value
     );
-    swal({
-      title: "Success",
-      text: result.data.message,
-      icon: "success",
-    });
+    useSwal(result.data.message);
     contactExists.value = !contactExists.value;
     fetch();
   } catch (error) {
-    swal({
-      title: error.name,
-      text:
-        (yup ? error.response.data.error : error.message) ||
-        error.response.data ||
-        "Some error happened",
-      icon: "error",
-    });
+    useSwal(yup ? error.response.data.error : error.message, error.name);
   }
 };
 
@@ -90,21 +79,10 @@ const updateContact = async () => {
       "http://localhost:9000/api/contact",
       contact.value
     );
-    swal({
-      title: "Success",
-      text: result.data.message,
-      icon: "success",
-    });
+    useSwal(result.data.message);
     fetch();
   } catch (error) {
-    swal({
-      title: error.name,
-      text:
-        (yup ? error.response.data.error : error.message) ||
-        error.response.data ||
-        "Some error happened",
-      icon: "error",
-    });
+    useSwal(yup ? error.response.data.error : error.message, error.name);
   }
 };
 </script>
@@ -119,7 +97,7 @@ const updateContact = async () => {
         <option
           v-for="(info, index) in infos"
           :key="index"
-          :value="info.userId"
+          :value="info.id"
         >
           {{ _.capitalize(info.name) }}
         </option>

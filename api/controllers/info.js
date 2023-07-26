@@ -15,8 +15,8 @@ const contactSchema = Joi.object({
 
 const getInfos = async (ctx) => {
   try {
-    const infos = await knex("basic_info").leftJoin("contact_info", {
-      "contact_info.userId": "basic_info.id",
+    const infos = await knex("contact_info").rightJoin("basic_info", {
+      "basic_info.id": "contact_info.userId",
     });
     ctx.body = { infos: infos };
   } catch (error) {
@@ -29,7 +29,7 @@ const postInfo = async (ctx) => {
   const info = ctx.request.body;
   try {
     await infoSchema.validateAsync(info);
-    const [id] = await knex("basic_info").insert({
+    await knex("basic_info").insert({
       name: info.name,
       age: info.age,
       address: info.address,
