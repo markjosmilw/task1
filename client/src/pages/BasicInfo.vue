@@ -4,6 +4,7 @@ import axios from "axios";
 import { object, string, number } from "yup";
 import swal from "sweetalert";
 import { useRouter } from "vue-router";
+import _ from "lodash";
 
 const router = useRouter();
 
@@ -14,13 +15,17 @@ const info = ref({
 });
 
 const infoSchema = object({
-  name: string().required().min(3, "Your name must be atleast 3 characters long."),
+  name: string()
+    .required()
+    .min(300, "Your name must be atleast 3 characters long."),
   age: number()
     .required()
     .positive()
     .integer()
     .max(120, "Please enter your real age."),
-  address: string().required().min(5, "Address must be atleast 5 characters long."),
+  address: string()
+    .required()
+    .min(5, "Address must be atleast 5 characters long."),
 });
 
 const handleInfo = async () => {
@@ -28,9 +33,9 @@ const handleInfo = async () => {
   try {
     yup = await infoSchema.validate(info.value);
     const res = await axios.post("http://localhost:9000/api/infos", {
-      name: info.value.name,
+      name: _.lowerCase(info.value.name),
       age: info.value.age,
-      address: info.value.address,
+      address: _.lowerCase(info.value.address),
     });
     swal({
       title: "Success",
@@ -43,7 +48,8 @@ const handleInfo = async () => {
       title: error.name,
       text:
         (yup ? error.response.data.error : error.message) ||
-        error.response.data || "404 not found",
+        error.response.data ||
+        "Some error happened",
       icon: "error",
     });
   }
@@ -72,5 +78,5 @@ const handleInfo = async () => {
 </template>
 
 <style scoped lang="scss">
-@import '../styles/form.scss'
+@import "../styles/form.scss";
 </style>

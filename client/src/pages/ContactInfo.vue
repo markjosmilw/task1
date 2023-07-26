@@ -11,7 +11,7 @@ onMounted(() => {
 });
 
 const contactExists = ref(false);
-const all = ref([]);
+const infos = ref([]);
 
 const contact = ref({
   userId: "",
@@ -22,7 +22,7 @@ const contact = ref({
 const fetch = async () => {
   try {
     const response = await axios.get("http://localhost:9000/api/infos");
-    all.value = response.data;
+    infos.value = response.data.infos;
   } catch (error) {
     console.log(error);
   }
@@ -41,7 +41,7 @@ const contactSchema = object({
 });
 
 const getContact = async () => {
-  const cont = _.find(all.value.contacts, {
+  const cont = _.find(infos.value, {
     userId: parseInt(contact.value.userId),
   });
   if (!cont) {
@@ -72,11 +72,11 @@ const handleContact = async () => {
     fetch();
   } catch (error) {
     swal({
-      title: error.name.split(/(?=[A-Z])/).join(" "),
+      title: error.name,
       text:
         (yup ? error.response.data.error : error.message) ||
         error.response.data ||
-        "404 not found",
+        "Some error happened",
       icon: "error",
     });
   }
@@ -98,11 +98,11 @@ const updateContact = async () => {
     fetch();
   } catch (error) {
     swal({
-      title: error.name.split(/(?=[A-Z])/).join(" "),
+      title: error.name,
       text:
         (yup ? error.response.data.error : error.message) ||
         error.response.data ||
-        "404 not found",
+        "Some error happened",
       icon: "error",
     });
   }
@@ -117,9 +117,9 @@ const updateContact = async () => {
       <select v-model="contact.userId" @change="getContact">
         <option disabled value="">Please select your name</option>
         <option
-          v-for="(info, index) in all.infos"
+          v-for="(info, index) in infos"
           :key="index"
-          :value="info.id"
+          :value="info.userId"
         >
           {{ _.capitalize(info.name) }}
         </option>

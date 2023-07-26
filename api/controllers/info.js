@@ -15,22 +15,10 @@ const contactSchema = Joi.object({
 
 const getInfos = async (ctx) => {
   try {
-    const infos = await knex("basic_info").select(
-      "id",
-      "name",
-      "age",
-      "address"
-    );
-    const contacts = await knex("contact_info").select(
-      "id",
-      "userId",
-      "email",
-      "phone"
-    );
-    const merge = await knex("basic_info").join("contact_info", {
-      "basic_info.id": "contact_info.userId",
+    const infos = await knex("basic_info").leftJoin("contact_info", {
+      "contact_info.userId": "basic_info.id",
     });
-    ctx.body = { infos: infos, contacts: contacts, merge: merge };
+    ctx.body = { infos: infos };
   } catch (error) {
     ctx.status = 500;
     ctx.body = error;
@@ -38,52 +26,56 @@ const getInfos = async (ctx) => {
 };
 
 const postInfo = async (ctx) => {
+  const info = ctx.request.body;
   try {
-    await infoSchema.validateAsync(ctx.request.body);
+    await infoSchema.validateAsync(info);
     const [id] = await knex("basic_info").insert({
-      name: ctx.request.body.name,
-      age: ctx.request.body.age,
-      address: ctx.request.body.address,
+      name: info.name,
+      age: info.age,
+      address: info.address,
     });
     ctx.body = {
       message: `Data received. Let's proceed to the next form.`,
-      userId: id,
     };
   } catch (error) {
     ctx.status = 500;
-    if (!error.code) return (ctx.body = { error: error.details[0].message });
-    ctx.body = { error: error.sqlMessage };
+    ctx.body = error.code
+      ? { error: error.sqlMessage }
+      : { error: error.details[0].message };
   }
 };
 
 const postContact = async (ctx) => {
+  const contact = ctx.request.body;
   try {
-    await contactSchema.validateAsync(ctx.request.body);
+    await contactSchema.validateAsync(contact);
     await knex("contact_info").insert({
-      email: ctx.request.body.email,
-      phone: ctx.request.body.phone,
-      userId: ctx.request.body.userId,
+      email: contact.email,
+      phone: contact.phone,
+      userId: contact.userId,
     });
     ctx.body = { message: "Data received" };
   } catch (error) {
     ctx.status = 500;
-    if (!error.code) return (ctx.body = { error: error.details[0].message });
-    ctx.body = { error: error.sqlMessage };
+    ctx.body = error.code
+      ? { error: error.sqlMessage }
+      : { error: error.details[0].message };
   }
 };
 
 const updateContact = async (ctx) => {
+  const contact = ctx.request.body;
   try {
-    await contactSchema.validateAsync(ctx.request.body);
+    await contactSchema.validateAsync(contact);
     await knex("contact_info")
-      .select("id", "userId", "email", "phone")
-      .where("userId", ctx.request.body.userId)
-      .update({ email: ctx.request.body.email, phone: ctx.request.body.phone });
+      .where("userId", contact.userId)
+      .update({ email: contact.email, phone: contact.phone });
     ctx.body = { message: "Contact updated succesfully" };
   } catch (error) {
     ctx.status = 500;
-    if (!error.code) return (ctx.body = { error: error.details[0].message });
-    ctx.body = { error: error.sqlMessage };
+    ctx.body = error.code
+      ? { error: error.sqlMessage }
+      : { error: error.details[0].message };
   }
 };
 
