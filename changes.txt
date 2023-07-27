@@ -1,5 +1,0 @@
-#27/07
-use of composables - useSwal.js
-separating schemas
-instead of fetching 3 tables i fetch 1 which is already merged using rightJoin by id, userId
-using dotenv on frontend
