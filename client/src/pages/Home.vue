@@ -1,8 +1,7 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import axios from "axios";
 import _ from "lodash";
-import { onMounted } from "vue";
 
 onMounted(() => {
   fetch();
@@ -13,7 +12,7 @@ const searchQuery = ref("");
 
 const fetch = async () => {
   try {
-    const response = await axios.get("http://localhost:9000/api/infos");
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/infos`);
     infos.value = _.filter(response.data.infos, (info) => info.email !== null);
   } catch (error) {
     console.log(error);

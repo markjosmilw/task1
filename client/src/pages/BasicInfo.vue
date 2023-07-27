@@ -32,7 +32,7 @@ const handleInfo = async () => {
   let yup;
   try {
     yup = await infoSchema.validate(info.value);
-    const res = await axios.post("http://localhost:9000/api/infos", {
+    const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/infos`, {
       name: _.lowerCase(info.value.name),
       age: info.value.age,
       address: _.lowerCase(info.value.address),

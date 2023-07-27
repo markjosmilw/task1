@@ -1,9 +1,8 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import axios from "axios";
 import { number, object, string } from "yup";
 import _ from "lodash";
-import { onMounted } from "vue";
 import useSwal from "../composables/useSwal";
 
 onMounted(() => {
@@ -21,7 +20,9 @@ const contact = ref({
 
 const fetch = async () => {
   try {
-    const response = await axios.get("http://localhost:9000/api/infos");
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}/api/infos`
+    );
     infos.value = response.data.infos;
   } catch (error) {
     console.log(error);
@@ -59,11 +60,15 @@ const handleContact = async () => {
   let yup;
   try {
     yup = await contactSchema.validate(contact.value);
-    const result = await axios.post(
-      "http://localhost:9000/api/contact",
-      contact.value
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}/api/contact`,
+      {
+        userId: contact.value.userId,
+        email: contact.value.email.toLowerCase(),
+        phone: contact.value.phone,
+      }
     );
-    useSwal(result.data.message);
+    useSwal(res.data.message);
     contactExists.value = !contactExists.value;
     fetch();
   } catch (error) {
@@ -76,8 +81,12 @@ const updateContact = async () => {
   try {
     yup = await contactSchema.validate(contact.value);
     const result = await axios.put(
-      "http://localhost:9000/api/contact",
-      contact.value
+      `${import.meta.env.VITE_API_URL}/api/contact`,
+      {
+        userId: contact.value.userId,
+        email: contact.value.email.toLowerCase(),
+        phone: contact.value.phone,
+      }
     );
     useSwal(result.data.message);
     fetch();
@@ -95,7 +104,7 @@ const updateContact = async () => {
       <select v-model="contact.userId" @change="getContact">
         <option disabled value="">Please select your name</option>
         <option
-          v-for="(info, index) in infos"
+          v-for="(info, index) in _.sortBy(infos, ['name'])"
           :key="index"
           :value="info.id"
         >
