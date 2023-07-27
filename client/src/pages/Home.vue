@@ -12,7 +12,9 @@ const searchQuery = ref("");
 
 const fetch = async () => {
   try {
-    const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/infos`);
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}/api/infos`
+    );
     infos.value = _.filter(response.data.infos, (info) => info.email !== null);
   } catch (error) {
     console.log(error);
@@ -29,6 +31,24 @@ const handleSearch = () => {
         info.name.toLowerCase().includes(search) ||
         info.address.toLowerCase().includes(search) ||
         info.email.toLowerCase().includes(search)
+    );
+  }
+};
+
+const handleDelete = async (info) => {
+  const e = await swal("Are you sure you want to delete this row?", {
+    buttons: ["no", "yes"],
+  });
+  if (e) {
+    console.log(info);
+    const res = await axios.delete("http://localhost:9000/api/infos", {
+      deleteUserId: _.toString(info),
+    });
+    console.log(res);
+    swal(
+      "Deleted!",
+      `You successfully deleted userId: ${info.userId}!`,
+      "success"
     );
   }
 };
@@ -59,6 +79,7 @@ const handleSearch = () => {
             <th>ADDRESS</th>
             <th>EMAIL</th>
             <th>PHONE</th>
+            <th>Action</th>
           </tr>
           <tr v-for="(info, index) in infos" :key="index">
             <td>{{ ++index }}</td>
@@ -67,6 +88,13 @@ const handleSearch = () => {
             <td>{{ _.truncate(_.capitalize(info.address)) }}</td>
             <td>{{ info.email }}</td>
             <td>{{ info.phone }}</td>
+            <td>
+              <a
+                @click="handleDelete(info.userId)"
+                style="cursor: pointer; color: rgb(230, 27, 27)"
+                >Delete</a
+              >
+            </td>
           </tr>
         </table>
       </div>

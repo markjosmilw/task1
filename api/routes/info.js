@@ -12,4 +12,7 @@ router.post('/api/contact', postContact)
 //PUT METHOD
 router.put('/api/contact', updateContact)
 
+//DELETE METHOD
+
+
 module.exports = router;
