@@ -1,7 +1,8 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, withCtx } from "vue";
 import axios from "axios";
 import _ from "lodash";
+import swal from "sweetalert";
 
 onMounted(() => {
   fetch();
@@ -35,21 +36,18 @@ const handleSearch = () => {
   }
 };
 
-const handleDelete = async (info) => {
-  const e = await swal("Are you sure you want to delete this row?", {
-    buttons: ["no", "yes"],
-  });
-  if (e) {
-    console.log(info);
-    const res = await axios.delete("http://localhost:9000/api/infos", {
-      deleteUserId: _.toString(info),
+const handleDelete = async (uid) => {
+  try {
+    const e = await swal("Are you sure you want to delete this row?", {
+      buttons: ["no", "yes"],
     });
-    console.log(res);
-    swal(
-      "Deleted!",
-      `You successfully deleted userId: ${info.userId}!`,
-      "success"
-    );
+    if (e) {
+      const res = await axios.delete(`${import.meta.env.VITE_API_URL}/api/infos/${uid}`);
+      swal("Deleted!", res.data.message, "success");
+      fetch()
+    }
+  } catch (error) {
+    console.log(error);
   }
 };
 </script>
@@ -79,7 +77,7 @@ const handleDelete = async (info) => {
             <th>ADDRESS</th>
             <th>EMAIL</th>
             <th>PHONE</th>
-            <th>Action</th>
+            <th>ACTION</th>
           </tr>
           <tr v-for="(info, index) in infos" :key="index">
             <td>{{ ++index }}</td>

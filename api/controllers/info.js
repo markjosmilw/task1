@@ -67,9 +67,22 @@ const updateContact = async (ctx) => {
   }
 };
 
+const deleteRow = async (ctx) => {
+  const userId = ctx.request.params.userId;
+  try {
+    await knex("contact_info").where("userId", userId).del();
+    await knex("basic_info").where("id", userId).del();
+    ctx.body = { message: "User deleted succesfully" };
+  } catch (error) {
+    ctx.status = 500;
+    ctx.body = { error: error.sqlMessage };
+  }
+};
+
 module.exports = {
   getInfos,
   postInfo,
   postContact,
   updateContact,
+  deleteRow,
 };
