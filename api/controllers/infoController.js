@@ -15,6 +15,21 @@ const getAll = async (ctx) => {
   }
 };
 
+const getInfos = async (ctx) => {
+  const id = ctx.request.params.id;
+  try {
+    const [user] = await knex("_users")
+      .where({ '_users.id': id })
+      .leftJoin("_personal", { "_personal.userId": "_users.id" })
+      .leftJoin("_contact", { "_contact.userId": "_users.id" });
+    ctx.body = { response: user };
+  } catch (error) {
+    console.log(error);
+    ctx.status = 500;
+    ctx.body = { error: error };
+  }
+};
+
 const updatePersonal = async (ctx) => {
   const p = ctx.request.body;
   try {
@@ -88,6 +103,7 @@ const updateContact = async (ctx) => {
 
 module.exports = {
   getAll,
+  getInfos,
   updatePersonal,
   updateContact,
 };

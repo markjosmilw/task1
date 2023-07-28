@@ -50,7 +50,9 @@ const logUser = async (ctx) => {
     ctx.body = { response: "login ok", accessToken: token };
   } catch (error) {
     ctx.status = 500;
-    ctx.body = { error: error };
+    ctx.body = error.code
+      ? { error: error.sqlMessage }
+      : { error: error.details[0].message };
   }
 };
 
