@@ -1,6 +1,7 @@
 const knex = require("../database/knex");
-const { userSchema } = require("../schemas/useSchema");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const { userSchema } = require("../schemas/useSchema");
 
 const regUser = async (ctx) => {
   const u = ctx.request.body;
@@ -9,7 +10,7 @@ const regUser = async (ctx) => {
     const exist = await knex("_users").where({ username: u.username });
     if (exist.length > 0) {
       ctx.status = 403;
-      ctx.body = { response: "username already" };
+      ctx.body = { error: "username already" };
       return;
     }
     const hashedPw = await bcrypt.hash(u.password, 10);
@@ -20,7 +21,10 @@ const regUser = async (ctx) => {
     ctx.body = { response: "reg ok" };
   } catch (error) {
     ctx.status = 500;
-    ctx.body = { error: error };
+    console.log(error);
+    ctx.body = error.code
+      ? { error: error.sqlMessage }
+      : { error: error.details[0].message };
   }
 };
 
@@ -33,23 +37,30 @@ const logUser = async (ctx) => {
     });
     if (!user) {
       ctx.status = 404;
-      ctx.body = { response: "username not exist" };
+      ctx.body = { error: "user not exist" };
       return;
     }
     const pwMatched = await bcrypt.compare(u.password, user.password);
     if (!pwMatched) {
       ctx.status = 403;
-      ctx.body = { response: "password not same" };
+      ctx.body = { error: "password not same" };
       return;
     }
-    ctx.body = { response: "login ok" };
+    const token = jwt.sign(user, "secret");
+    ctx.body = { response: "login ok", accessToken: token };
   } catch (error) {
     ctx.status = 500;
     ctx.body = { error: error };
   }
 };
 
+const authTest = async (ctx) => {
+  const { password, iat, ...user } = ctx.request.user;
+  ctx.body = user;
+};
+
 module.exports = {
   regUser,
   logUser,
+  authTest,
 };
