@@ -1,26 +1,18 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import axios from "axios";
-
-const user = ref([]);
-const accessToken = ref("");
-
-const fetch = async () => {
-  accessToken.value = localStorage.getItem("accessToken");
-  if (accessToken.value) {
-    const res = await axios.post("http://localhost:8080/api/jwt", {
-      accessToken: accessToken.value,
-    });
-    user.value = res.data;
-  }
-};
-
-fetch();
+import { fetch } from "../composables/useFetch";
+mounted(() => {
+  console.log('mounted');
+}),
 </script>
+
+
 <template>
   <div class="container">
     <div class="landing">
-      <h1>Hello {{ user.username ? user.username : "visitor" }}</h1>
+      <h1>Hi</h1>
+      <!-- <h1>Hello {{ user.username ? user.username : "visitor" }}</h1> -->
     </div>
   </div>
 </template>

@@ -21,8 +21,7 @@ const handleLogin = async () => {
     );
     localStorage.setItem("accessToken", res.data.accessToken);
     err.value = "";
-    const ok = await useSwal(res.data.response);
-    if (ok) router.push("/login");
+    await useSwal(res.data.response);
     router.push("/");
   } catch (error) {
     err.value = error.response.data.error;

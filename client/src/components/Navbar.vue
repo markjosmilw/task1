@@ -3,7 +3,7 @@ import { ref } from "vue";
 import axios from "axios";
 import { RouterLink } from "vue-router";
 import { useRouter } from "vue-router";
-import useWarning from "../composables/useSwal";
+import useSwal from "../composables/useSwal";
 
 const router = useRouter();
 const user = ref([]);
@@ -21,7 +21,7 @@ const fetch = async () => {
 };
 
 const handleLogout = async () => {
-  const ok = await useWarning("This will log out your account!");
+  const ok = await useSwal('Logged out succesfully')
   localStorage.removeItem("accessToken");
   fetch();
   router.push("/login");
