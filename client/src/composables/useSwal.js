@@ -1,9 +1,17 @@
-const swal = require("sweetalert");
+import swal from "sweetalert";
 
 export default function useSwal(text, err) {
   return swal({
-    icon: "success",
-    test: "sample text",
-    icon: "error",
+    title: err ? err : "Success",
+    text: text || "Some error happened",
+    icon: err ? "error" : "success",
   });
 }
+
+export function useWarning(text) {
+    return swal({
+      title: err ? err : "Success",
+      text: text || "Some error happened",
+      icon: 'warning',
+    });
+  }

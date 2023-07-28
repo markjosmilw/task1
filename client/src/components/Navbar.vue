@@ -3,6 +3,7 @@ import { ref } from "vue";
 import axios from "axios";
 import { RouterLink } from "vue-router";
 import { useRouter } from "vue-router";
+import useWarning from "../composables/useSwal";
 
 const router = useRouter();
 const user = ref([]);
@@ -14,12 +15,13 @@ const fetch = async () => {
     const res = await axios.post("http://localhost:8080/api/jwt", {
       accessToken: accessToken.value,
     });
-    return user.value = res.data;
+    return (user.value = res.data);
   }
-  user.value = []
+  user.value = [];
 };
 
-const handleLogout = () => {
+const handleLogout = async () => {
+  const ok = await useWarning("This will log out your account!");
   localStorage.removeItem("accessToken");
   fetch();
   router.push("/login");

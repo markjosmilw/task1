@@ -31,7 +31,6 @@ const regUser = async (ctx) => {
 const logUser = async (ctx) => {
   const u = ctx.request.body;
   try {
-    await userSchema.validateAsync(u);
     const [user] = await knex("_users").where({
       username: u.username,
     });

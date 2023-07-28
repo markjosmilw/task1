@@ -11,6 +11,8 @@ const user = ref({
   password: "",
 });
 
+const err = ref("");
+
 const handleLogin = async () => {
   try {
     const res = await axios.post(
@@ -18,10 +20,12 @@ const handleLogin = async () => {
       user.value
     );
     localStorage.setItem("accessToken", res.data.accessToken);
-    await useSwal("sd");
+    err.value = "";
+    const ok = await useSwal(res.data.response);
+    if (ok) router.push("/login");
     router.push("/");
   } catch (error) {
-    console.log(error.response.data.error);
+    err.value = error.response.data.error;
   }
 };
 </script>
@@ -37,6 +41,9 @@ const handleLogin = async () => {
         <label for="username">Password</label>
         <input type="text" v-model="user.password" />
       </div>
+      <p class="errMessage">
+        <span>{{ err }}</span>
+      </p>
       <div>
         <input
           type="submit"
