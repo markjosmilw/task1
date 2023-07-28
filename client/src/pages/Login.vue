@@ -1,6 +1,10 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
+import { useRouter } from "vue-router";
+import useSwal from "../composables/useSwal";
+
+const router = useRouter();
 
 const user = ref({
   username: "",
@@ -13,8 +17,9 @@ const handleLogin = async () => {
       "http://localhost:8080/api/auth/login",
       user.value
     );
-    localStorage.setItem('accessToken', res.data.accessToken)
-    console.log(res.data.response);
+    localStorage.setItem("accessToken", res.data.accessToken);
+    await useSwal("sd");
+    router.push("/");
   } catch (error) {
     console.log(error.response.data.error);
   }

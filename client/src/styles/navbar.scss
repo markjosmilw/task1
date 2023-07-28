@@ -12,6 +12,9 @@
     background-color: #2e5e4e;
     border: none;
     border-radius: 15px;
+    &:hover {
+      opacity: 0.8;
+    }
   }
   font-size: 30px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;

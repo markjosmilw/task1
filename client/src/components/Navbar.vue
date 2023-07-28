@@ -14,12 +14,14 @@ const fetch = async () => {
     const res = await axios.post("http://localhost:8080/api/jwt", {
       accessToken: accessToken.value,
     });
-    user.value = res.data;
+    return user.value = res.data;
   }
+  user.value = []
 };
 
 const handleLogout = () => {
   localStorage.removeItem("accessToken");
+  fetch();
   router.push("/login");
 };
 
