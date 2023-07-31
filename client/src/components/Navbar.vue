@@ -6,9 +6,13 @@ import { useRouter } from "vue-router";
 import useSwal from "../composables/useSwal";
 
 onMounted(async () => {
+  refresh();
+});
+
+async function refresh() {
   const r = await fetch();
   user.value = r;
-});
+}
 
 const router = useRouter();
 const user = ref([]);
@@ -17,6 +21,7 @@ const handleLogout = async () => {
   const ok = await useSwal("Logged out succesfully");
   localStorage.removeItem("accessToken");
   user.value = [];
+  refresh();
   router.push("/login");
 };
 </script>

@@ -37,8 +37,8 @@ const handleLogin = async () => {
         <input type="text" v-model="user.username" />
       </div>
       <div>
-        <label for="username">Password</label>
-        <input type="text" v-model="user.password" />
+        <label for="password">Password</label>
+        <input type="password" v-model="user.password" />
       </div>
       <p class="errMessage">
         <span>{{ err }}</span>
