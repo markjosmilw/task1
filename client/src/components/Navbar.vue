@@ -1,11 +1,14 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { fetch } from "../composables/useFetch";
 import { RouterLink } from "vue-router";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import useSwal from "../composables/useSwal";
 
-onMounted(async () => {
+const route = useRoute();
+
+watch(route, (route) => {
+  console.log(route.path);
   refresh();
 });
 
@@ -18,10 +21,8 @@ const router = useRouter();
 const user = ref([]);
 
 const handleLogout = async () => {
-  const ok = await useSwal("Logged out succesfully");
+  await useSwal("Logged out succesfully");
   localStorage.removeItem("accessToken");
-  user.value = [];
-  refresh();
   router.push("/login");
 };
 </script>
@@ -31,7 +32,7 @@ const handleLogout = async () => {
     <div class="nav">
       <RouterLink v-if="!user" to="/register">Register</RouterLink>
       <RouterLink v-if="!user" to="/login">Login</RouterLink>
-      <RouterLink v-if="user && user.role == 0" to="/profile"
+      <RouterLink v-if="user && user.role === 0" to="/profile"
         >Profile</RouterLink
       >
       <RouterLink v-if="user" @click="handleLogout" to="/">Logout</RouterLink>

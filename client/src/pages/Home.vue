@@ -21,16 +21,18 @@ const fetchInfos = async () => {
   );
 };
 
-const editUser = async (userId) => {
-  swal({
-    content: {
-      element: "input",
-      attributes: {
-        placeholder: "Type your password",
-        type: "password",
-      },
-    },
-  });
+const deleteUser = async (info) => {
+  try {
+    const e = await swal(`Are you sure you want to delete ${info.firstName}?`, {
+      buttons: ["no", "yes"],
+    });
+    if (e) {
+      const res = await axios.delete(`http://localhost:8080/api/infos/${info.userId}`);
+      swal("Deleted!", res.data.message, "success");
+    }
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 fetchInfos();
@@ -38,8 +40,8 @@ fetchInfos();
 <template>
   <div class="container">
     <div class="landing">
-      <h1>Hello {{ user.username ? user.username : "visitor" }}</h1>
-      <div v-if="user.role === 1" class="tableContainer">
+      <h1>Hello {{ user ? user.username : "visitor" }}</h1>
+      <div v-if="user && user.role === 1" class="tableContainer">
         <h1>Data table</h1>
         <table id="customers">
           <tr>
@@ -64,7 +66,7 @@ fetchInfos();
             <td>{{ _.upperFirst(info.city) }}</td>
             <td>{{ info.email }}</td>
             <td>{{ info.phone }}</td>
-            <td><a @click="editUser(info.userId)">Edit</a> | <a>Delete</a></td>
+            <td><a @click="editUser(info.userId)">Edit</a> | <a @click="deleteUser(info)">Delete</a></td>
           </tr>
         </table>
       </div>

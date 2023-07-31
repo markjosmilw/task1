@@ -18,7 +18,7 @@ const getInfos = async (ctx) => {
   const id = ctx.request.params.id;
   try {
     const [user] = await knex("_users")
-      .where({ '_users.id': id })
+      .where({ "_users.id": id })
       .leftJoin("_personal", { "_personal.userId": "_users.id" })
       .leftJoin("_contact", { "_contact.userId": "_users.id" });
     ctx.body = { response: user };
@@ -101,9 +101,23 @@ const updateContact = async (ctx) => {
   }
 };
 
+const deleteInfos = async (ctx) => {
+  const id = ctx.request.params.id;
+  try {
+    await knex("_contact").where({ userId: id }).del();
+    await knex("_personal").where({ userId: id }).del();
+    await knex("_users").where({ id: id }).del();
+    ctx.body = { response: "user deleted" };
+  } catch (error) {
+    ctx.status = 500;
+    ctx.body = { error: error.sqlMessage };
+  }
+};
+
 module.exports = {
   getAll,
   getInfos,
   updatePersonal,
   updateContact,
+  deleteInfos,
 };

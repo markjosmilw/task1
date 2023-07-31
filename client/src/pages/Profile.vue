@@ -121,7 +121,7 @@ fetch();
           value="save"
         />
       </div>
-      <button class="return">return</button>
+      <button @click.prevent="editProfile=!editProfile" class="return">return</button>
     </form>
   </div>
 </template>
