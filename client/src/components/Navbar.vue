@@ -3,7 +3,7 @@ import { ref, onMounted, watch } from "vue";
 import { fetch } from "../composables/useFetch";
 import { RouterLink } from "vue-router";
 import { useRouter, useRoute } from "vue-router";
-import useSwal from "../composables/useSwal";
+import {useSwal} from "../composables/useSwal";
 
 const route = useRoute();
 

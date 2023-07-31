@@ -1,14 +1,10 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import axios from "axios";
 import _ from "lodash";
 import swal from "sweetalert";
 import { fetch } from "../composables/useFetch";
-
-onMounted(async () => {
-  const r = await fetch();
-  user.value = r;
-});
+import { useHandlePersonal, useHandleContact } from "../composables/useForms";
 
 const user = ref([]);
 const infos = ref([]);
@@ -19,9 +15,18 @@ const info = ref({
   gender: "",
   city: "",
   email: "",
-  password: "",
+  phone: "",
 });
+
 const editState = ref(false);
+
+onMounted(async () => {
+  user.value = await fetch();
+});
+
+watch(editState, () => {
+  fetchInfos();
+});
 
 const fetchInfos = async () => {
   const res = await axios.get("http://localhost:8080/api/infos");
@@ -31,15 +36,13 @@ const fetchInfos = async () => {
   );
 };
 
-const deleteUser = async (info) => {
+const deleteUser = async (uid) => {
   try {
-    const e = await swal(`Are you sure you want to delete ${info.firstName}?`, {
+    const e = await swal(`Are you sure you want to delete this user?`, {
       buttons: ["no", "yes"],
     });
     if (e) {
-      const res = await axios.delete(
-        `http://localhost:8080/api/infos/${info.userId}`
-      );
+      const res = await axios.delete(`http://localhost:8080/api/infos/${uid}`);
       swal("Deleted!", res.data.message, "success");
     }
   } catch (error) {
@@ -47,9 +50,11 @@ const deleteUser = async (info) => {
   }
 };
 
-const editUser = (userId) => {
+const editUser = (uid) => {
   editState.value = true;
-  console.log(_.filter(infos, (info) => console.log(info.userId)));
+  const cont = _.find(infos.value, { userId: uid });
+  const { password, ...others } = cont;
+  info.value = others;
 };
 
 fetchInfos();
@@ -59,7 +64,7 @@ fetchInfos();
     <div class="landing">
       <h1>Hello {{ user ? user.username : "visitor" }}</h1>
       <div v-if="user && user.role === 1" class="tableContainer">
-        <div>
+        <div v-if="!editState">
           <h1>Data table</h1>
           <table id="customers">
             <tr>
@@ -88,32 +93,66 @@ fetchInfos();
               <td>{{ info.phone }}</td>
               <td>
                 <a @click="editUser(info.userId)">Edit</a> |
-                <a @click="deleteUser(info)">Delete</a>
+                <a @click="deleteUser(info.userId)">Delete</a>
               </td>
             </tr>
           </table>
         </div>
-        <div v-if="editState">
-          {{ info }}
-        </div>
-        <!-- <div class="editForm">
-          <form>
-            <label for="fname">First Name</label>
-            <input type="text" placeholder="Your name.." />
-            <label for="lname">Last Name</label>
-            <input type="text" placeholder="Your last name.." />
-            <label for="age">Age</label>
-            <input type="number" placeholder="Your age.." />
-            <label for="gender">Gender</label>
-            <select>
-              <option value="male">male</option>
-              <option value="female">female</option>
-            </select>
-            <label for="city">City</label>
-            <input type="text" placeholder="Your city.." />
-            <input type="submit" value="Submit" />
+        <div class="editForm" v-if="editState">
+          <form class="form">
+            <h1>Personal Information</h1>
+            <div>
+              <label for="firstName">First Name</label>
+              <input type="text" v-model="info.firstName" />
+            </div>
+            <div>
+              <label for="lastName">Last Name</label>
+              <input type="text" v-model="info.lastName" />
+            </div>
+            <div>
+              <label for="age">Age</label>
+              <input type="number" v-model="info.age" />
+            </div>
+            <div>
+              <label for="gender">Gender</label>
+              <input type="text" v-model="info.gender" />
+            </div>
+            <div>
+              <label for="city">City</label>
+              <input type="text" v-model="info.city" />
+            </div>
+            <div>
+              <input
+                type="submit"
+                @click.prevent="useHandlePersonal(info)"
+                class="button"
+                value="save"
+              />
+            </div>
           </form>
-        </div> -->
+          <form v-if="editState" class="form">
+            <h1>Contact Information</h1>
+            <div>
+              <label for="firstName">Email</label>
+              <input type="text" v-model="info.email" />
+            </div>
+            <div>
+              <label for="lastName">Phone</label>
+              <input type="text" v-model="info.phone" />
+            </div>
+            <div>
+              <input
+                type="submit"
+                @click.prevent="useHandleContact(info)"
+                class="button"
+                value="save"
+              />
+            </div>
+            <button @click.prevent="editState = !editState" class="return">
+              return
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   </div>

@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
-import useSwal from "../composables/useSwal";
+import {useSwal} from "../composables/useSwal";
 
 const router = useRouter();
 

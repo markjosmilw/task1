@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
-import useSwal from "../composables/useSwal";
+import {useSwal} from "../composables/useSwal";
 
 const user = ref([]);
 const info = ref([]);
