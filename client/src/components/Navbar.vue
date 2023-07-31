@@ -8,7 +8,6 @@ import useSwal from "../composables/useSwal";
 const route = useRoute();
 
 watch(route, (route) => {
-  console.log(route.path);
   refresh();
 });
 
