@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
+import useSwal from "../composables/useSwal";
 
 const user = ref([]);
 const info = ref([]);
@@ -14,7 +15,6 @@ const fetch = async () => {
       accessToken: accessToken.value,
     });
     user.value = res.data;
-
     const res2 = await axios.get(
       `http://localhost:8080/api/infos/${user.value.id}`
     );
@@ -32,9 +32,9 @@ const handlePersonal = async () => {
       gender: info.value.gender,
       city: info.value.city,
     });
-    console.log(res.data.response);
+    useSwal(res.data.response)
   } catch (error) {
-    console.log(error);
+    useSwal(error.response.data.error, "Update failed")
   }
 };
 
@@ -46,8 +46,9 @@ const handleContact = async () => {
       phone: info.value.phone,
     });
     console.log(res.data.response);
+    useSwal(res.data.response)
   } catch (error) {
-    console.log(error);
+    useSwal(error.response.data.error, "Update failed")
   }
 };
 

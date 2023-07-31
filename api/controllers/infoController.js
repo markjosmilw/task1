@@ -9,7 +9,6 @@ const getAll = async (ctx) => {
       .leftJoin("_contact", { "_contact.userId": "_users.id" });
     ctx.body = { response: users };
   } catch (error) {
-    console.log(error);
     ctx.status = 500;
     ctx.body = { error: error };
   }
@@ -24,7 +23,6 @@ const getInfos = async (ctx) => {
       .leftJoin("_contact", { "_contact.userId": "_users.id" });
     ctx.body = { response: user };
   } catch (error) {
-    console.log(error);
     ctx.status = 500;
     ctx.body = { error: error };
   }
@@ -62,9 +60,10 @@ const updatePersonal = async (ctx) => {
     });
     ctx.body = { response: "personal added" };
   } catch (error) {
-    console.log(error);
     ctx.status = 500;
-    ctx.body = { error: error };
+    ctx.body = error.code
+      ? { error: error.sqlMessage }
+      : { error: error.details[0].message };
   }
 };
 
@@ -95,9 +94,10 @@ const updateContact = async (ctx) => {
     });
     ctx.body = { response: "contact added" };
   } catch (error) {
-    console.log(error);
     ctx.status = 500;
-    ctx.body = { error: error };
+    ctx.body = error.code
+      ? { error: error.sqlMessage }
+      : { error: error.details[0].message };
   }
 };
 
