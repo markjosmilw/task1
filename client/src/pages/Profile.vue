@@ -1,10 +1,19 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
-import {useSwal} from "../composables/useSwal";
+import { useSwal } from "../composables/useSwal";
+import { useHandlePersonal, useHandleContact } from "../composables/useForms";
 
-const user = ref([]);
-const info = ref([]);
+const user = ref({});
+const info = ref({
+  userId: "",
+  firstName: "",
+  lastName: "",
+  age: "",
+  address: "",
+  email: "",
+  phone: "",
+});
 const accessToken = ref("");
 const editProfile = ref(false);
 
@@ -15,40 +24,11 @@ const fetch = async () => {
       accessToken: accessToken.value,
     });
     user.value = res.data;
+    info.value.userId = user.value.id;
     const res2 = await axios.get(
       `http://localhost:8080/api/infos/${user.value.id}`
     );
     info.value = res2.data.response;
-  }
-};
-
-const handlePersonal = async () => {
-  try {
-    const res = await axios.post("http://localhost:8080/api/infos/personal", {
-      userId: user.value.id,
-      firstName: info.value.firstName,
-      lastName: info.value.lastName,
-      age: info.value.age,
-      gender: info.value.gender,
-      city: info.value.city,
-    });
-    useSwal(res.data.response)
-  } catch (error) {
-    useSwal(error.response.data.error, "Update failed")
-  }
-};
-
-const handleContact = async () => {
-  try {
-    const res = await axios.post("http://localhost:8080/api/infos/contact", {
-      userId: user.value.id,
-      email: info.value.email,
-      phone: info.value.phone,
-    });
-    console.log(res.data.response);
-    useSwal(res.data.response)
-  } catch (error) {
-    useSwal(error.response.data.error, "Update failed")
   }
 };
 
@@ -81,7 +61,7 @@ fetch();
       <div>
         <input
           type="submit"
-          @click.prevent="handlePersonal"
+          @click.prevent="useHandlePersonal(info)"
           class="button"
           value="save"
         />
@@ -116,12 +96,14 @@ fetch();
       <div>
         <input
           type="submit"
-          @click.prevent="handleContact"
+          @click.prevent="useHandleContact(info)"
           class="button"
           value="save"
         />
       </div>
-      <button @click.prevent="editProfile=!editProfile" class="return">return</button>
+      <button @click.prevent="editProfile = !editProfile" class="return">
+        return
+      </button>
     </form>
   </div>
 </template>

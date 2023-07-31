@@ -1,8 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 const verifyToken = (ctx, next) => {
-  const token =
-    ctx.request.headers["x-access-token"] || ctx.request.body.accessToken;
+  const token = ctx.request.body.accessToken;
 
   if (!token) {
     ctx.status = 403;

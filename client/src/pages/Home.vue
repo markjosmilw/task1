@@ -6,19 +6,10 @@ import swal from "sweetalert";
 import { fetch } from "../composables/useFetch";
 import { useHandlePersonal, useHandleContact } from "../composables/useForms";
 
+const editState = ref(false);
 const user = ref([]);
 const infos = ref([]);
-const info = ref({
-  firstName: "",
-  lastName: "",
-  age: "",
-  gender: "",
-  city: "",
-  email: "",
-  phone: "",
-});
-
-const editState = ref(false);
+const info = ref({});
 
 onMounted(async () => {
   user.value = await fetch();
@@ -62,7 +53,8 @@ fetchInfos();
 <template>
   <div class="container">
     <div class="landing">
-      <h1>Hello {{ user ? user.username : "visitor" }}</h1>
+      <h1 v-if="!editState">Hello {{ user ? user.username : "visitor" }}</h1>
+      <h1 v-if="editState">User ID: {{ info ? info.userId : "undefined" }}</h1>
       <div v-if="user && user.role === 1" class="tableContainer">
         <div v-if="!editState">
           <h1>Data table</h1>
