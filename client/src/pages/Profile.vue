@@ -1,7 +1,6 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
-import { useSwal } from "../composables/useSwal";
 import { useHandlePersonal, useHandleContact } from "../composables/useForms";
 
 const user = ref({});
