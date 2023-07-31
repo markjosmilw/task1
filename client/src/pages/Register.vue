@@ -1,8 +1,9 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
-import { useSwal } from "../composables/useSwal";
 import { useRouter } from "vue-router";
+import { object, string } from "yup";
+import { useSwal } from "../composables/useSwal";
 
 const router = useRouter();
 
@@ -13,8 +14,14 @@ const user = ref({
 
 const err = ref("");
 
+const userSchema = object({
+  username: string().min(5).required(),
+  password: string().min(5).required(),
+});
+
 const handleReg = async () => {
   try {
+    await userSchema.validate(user.value);
     const res = await axios.post(
       "http://localhost:8080/api/auth/register",
       user.value
@@ -23,7 +30,10 @@ const handleReg = async () => {
     const ok = await useSwal(res.data.response);
     if (ok) router.push("/login");
   } catch (error) {
-    err.value = error.response.data.error;
+    err.value =
+      error.name === "ValidationError"
+        ? error.message
+        : error.response.data.error;
   }
 };
 </script>

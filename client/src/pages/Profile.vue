@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import axios from "axios";
 import { useHandlePersonal, useHandleContact } from "../composables/useForms";
 
@@ -9,12 +9,17 @@ const info = ref({
   firstName: "",
   lastName: "",
   age: "",
-  address: "",
+  city: "",
   email: "",
   phone: "",
 });
+
 const accessToken = ref("");
 const editProfile = ref(false);
+
+watch(editProfile, () => {
+  fetch();
+});
 
 const fetch = async () => {
   accessToken.value = localStorage.getItem("accessToken");
