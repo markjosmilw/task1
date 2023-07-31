@@ -21,7 +21,6 @@ const regUser = async (ctx) => {
     ctx.body = { response: "reg ok" };
   } catch (error) {
     ctx.status = 500;
-    console.log(error);
     ctx.body = error.code
       ? { error: error.sqlMessage }
       : { error: error.details[0].message };
