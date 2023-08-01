@@ -71,7 +71,7 @@ fetch();
           type="submit"
           @click.prevent="useHandlePersonal(info)"
           class="button"
-          value="save"
+          :value="info.id?'update':'save'"
         />
       </div>
     </form>
@@ -106,7 +106,7 @@ fetch();
           type="submit"
           @click.prevent="useHandleContact(info)"
           class="button"
-          value="save"
+          :value="info.id?'update':'save'"
         />
       </div>
       <button @click.prevent="editProfile = !editProfile" class="return">

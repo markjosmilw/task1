@@ -35,7 +35,8 @@ const deleteUser = async (uid) => {
     });
     if (e) {
       const res = await axios.delete(`http://localhost:8080/api/infos/${uid}`);
-      swal("Deleted!", res.data.message, "success");
+      fetchInfos();
+      swal("Deleted!", res.data.response, "success");
     }
   } catch (error) {
     console.log(error);
@@ -50,18 +51,18 @@ const editUser = (uid) => {
 };
 
 const handleSearch = () => {
-    const search = searchQuery.value.toLowerCase();
-    if (search === "") {
-      fetchInfos();
-    } else {
-      infos.value = infos.value.filter(
-        (info) =>
-          info.firstName.toLowerCase().includes(search) ||
-          info.city.toLowerCase().includes(search) ||
-          info.email.toLowerCase().includes(search)
-      );
-    }
-  };
+  const search = searchQuery.value.toLowerCase();
+  if (search === "") {
+    fetchInfos();
+  } else {
+    infos.value = infos.value.filter(
+      (info) =>
+        info.firstName.toLowerCase().includes(search) ||
+        info.city.toLowerCase().includes(search) ||
+        info.email.toLowerCase().includes(search)
+    );
+  }
+};
 
 fetchInfos();
 </script>
@@ -105,8 +106,8 @@ fetchInfos();
               <td>{{ info.email }}</td>
               <td>{{ info.phone }}</td>
               <td>
-                <a @click="editUser(info.userId)">Edit</a> |
-                <a @click="deleteUser(info.userId)">Delete</a>
+                <a style="color: green;" @click="editUser(info.userId)">Edit</a> |
+                <a style="color: red;" @click="deleteUser(info.userId)">Delete</a>
               </td>
             </tr>
           </table>

@@ -6,6 +6,8 @@
     align-items: center;
     gap: 10px;
     .tableContainer {
+      
+
       .tableHeader {
         display: flex;
         align-items: center;
@@ -21,6 +23,9 @@
         th {
           border: 1px solid #ddd;
           padding: 8px;
+          a {
+            cursor: pointer;
+          }
         }
         tr:nth-child(even) {
           background-color: #f2f2f2;
