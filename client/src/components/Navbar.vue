@@ -29,7 +29,7 @@ const handleLogout = async () => {
     <RouterLink to="/">Home</RouterLink>
     <div class="nav">
       <RouterLink to="/about">About us</RouterLink>
-      <RouterLink v-if="user && user.role === 0" to="/contact">Contact us</RouterLink>
+      <RouterLink to="/contact">Contact us</RouterLink>
       <RouterLink v-if="!user" to="/register">Register</RouterLink>
       <RouterLink v-if="!user" to="/login">Login</RouterLink>
       <RouterLink v-if="user && user.role === 0" to="/profile"

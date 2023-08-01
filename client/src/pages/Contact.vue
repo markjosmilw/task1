@@ -1,47 +1,14 @@
-<script setup>
-import { onMounted, ref } from "vue";
-import { fetch } from "../composables/useFetch";
-import { useRouter } from "vue-router";
-
-const router = useRouter();
-const user = ref({});
-const form = ref({
-  title: "",
-  message: "",
-});
-
-onMounted(async () => {
-  user.value = await fetch();
-  if (!user.value) router.push("/");
-});
-
-async function sendForm() {
-  console.log("form sent");
-}
-</script>
+<script setup></script>
 
 <template>
   <div class="container">
-    {{ user }}
-    <form class="contactForm">
-      <h1>Contact form</h1>
+    <h1>Contact us</h1>
+    <div class="subContainer">
       <div>
-        <label for="title">Title</label>
-        <input v-model="form.title" type="text" />
+        <p>09999999999</p>
+        <p>contact_us@gmail.com</p>
       </div>
-      <div>
-        <label for="message">Message</label>
-        <textarea v-model="form.message" rows="4" cols="50"></textarea>
-      </div>
-      <div>
-        <input
-          type="submit"
-          @click.prevent="sendForm"
-          class="button"
-          value="submit"
-        />
-      </div>
-    </form>
+    </div>
   </div>
 </template>
 
