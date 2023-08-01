@@ -1,8 +1,14 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 import axios from "axios";
 import { useHandlePersonal, useHandleContact } from "../composables/useForms";
+import { useRouter } from "vue-router";
 
+onMounted(() => {
+  fetch();
+});
+
+const router = useRouter();
 const user = ref({});
 const info = ref({
   userId: "",
@@ -24,20 +30,20 @@ watch(editProfile, () => {
 
 const fetch = async () => {
   accessToken.value = localStorage.getItem("accessToken");
-  if (accessToken.value) {
-    const res = await axios.post("http://localhost:8080/api/jwt", {
-      accessToken: accessToken.value,
-    });
-    user.value = res.data;
-    const res2 = await axios.get(
-      `http://localhost:8080/api/infos/${user.value.id}`
-    );
-    info.value = res2.data.response;
-    info.value.userId = user.value.id;
+  if (!accessToken.value) {
+    router.push("/login");
+    return;
   }
+  const res = await axios.post(`${import.meta.env.VITE_SERVER}/api/jwt`, {
+    accessToken: accessToken.value,
+  });
+  user.value = res.data;
+  const res2 = await axios.get(
+    `${import.meta.env.VITE_SERVER}/api/infos/${user.value.id}`
+  );
+  info.value = res2.data.response;
+  info.value.userId = user.value.id;
 };
-
-fetch();
 </script>
 <template>
   <div class="container">
@@ -71,7 +77,7 @@ fetch();
           type="submit"
           @click.prevent="useHandlePersonal(info)"
           class="button"
-          :value="info.id?'update':'save'"
+          :value="info.id ? 'update' : 'save'"
         />
       </div>
     </form>
@@ -106,7 +112,7 @@ fetch();
           type="submit"
           @click.prevent="useHandleContact(info)"
           class="button"
-          :value="info.id?'update':'save'"
+          :value="info.id ? 'update' : 'save'"
         />
       </div>
       <button @click.prevent="editProfile = !editProfile" class="return">

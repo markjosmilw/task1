@@ -1,6 +1,7 @@
 .container {
   height: 90vh;
   display: flex;
+  flex-direction: row;
   gap: 50px;
   .return {
     padding: 5px 10px;

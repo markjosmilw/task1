@@ -1,8 +1,15 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
-import {useSwal} from "../composables/useSwal";
+
+onMounted(() => {
+  const accessToken = localStorage.getItem("accessToken");
+  if (accessToken) {
+    router.push("/");
+    return;
+  }
+});
 
 const router = useRouter();
 
@@ -16,12 +23,11 @@ const err = ref("");
 const handleLogin = async () => {
   try {
     const res = await axios.post(
-      "http://localhost:8080/api/auth/login",
+      `${import.meta.env.VITE_SERVER}/api/auth/login`,
       user.value
     );
     localStorage.setItem("accessToken", res.data.accessToken);
     err.value = "";
-    await useSwal(res.data.response);
     router.push("/");
   } catch (error) {
     err.value = error.response.data.error;

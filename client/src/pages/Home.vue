@@ -21,7 +21,7 @@ watch(editState, () => {
 });
 
 const fetchInfos = async () => {
-  const res = await axios.get("http://localhost:8080/api/infos");
+  const res = await axios.get(`${import.meta.env.VITE_SERVER}/api/infos`);
   infos.value = _.filter(
     res.data.response,
     (info) => info.email !== null && info.firstName !== null
@@ -34,7 +34,7 @@ const deleteUser = async (uid) => {
       buttons: ["no", "yes"],
     });
     if (e) {
-      const res = await axios.delete(`http://localhost:8080/api/infos/${uid}`);
+      const res = await axios.delete(`${import.meta.env.VITE_SERVER}/api/infos/${uid}`);
       fetchInfos();
       swal("Deleted!", res.data.response, "success");
     }

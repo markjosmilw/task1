@@ -1,9 +1,17 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import { object, string } from "yup";
 import { useSwal } from "../composables/useSwal";
+
+onMounted(() => {
+  const accessToken = localStorage.getItem("accessToken");
+  if (accessToken) {
+    router.push("/");
+    return;
+  }
+});
 
 const router = useRouter();
 
@@ -23,7 +31,7 @@ const handleReg = async () => {
   try {
     await userSchema.validate(user.value);
     const res = await axios.post(
-      "http://localhost:8080/api/auth/register",
+      `${import.meta.env.VITE_SERVER}/api/auth/register`,
       user.value
     );
     err.value = "";

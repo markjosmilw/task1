@@ -1,9 +1,9 @@
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, watch } from "vue";
 import { fetch } from "../composables/useFetch";
 import { RouterLink } from "vue-router";
 import { useRouter, useRoute } from "vue-router";
-import {useSwal} from "../composables/useSwal";
+
 
 const route = useRoute();
 
@@ -20,7 +20,6 @@ const router = useRouter();
 const user = ref([]);
 
 const handleLogout = async () => {
-  await useSwal("Logged out succesfully");
   localStorage.removeItem("accessToken");
   router.push("/login");
 };
@@ -29,6 +28,8 @@ const handleLogout = async () => {
   <div class="header">
     <RouterLink to="/">Home</RouterLink>
     <div class="nav">
+      <RouterLink to="/about">About us</RouterLink>
+      <RouterLink v-if="user && user.role === 0" to="/contact">Contact us</RouterLink>
       <RouterLink v-if="!user" to="/register">Register</RouterLink>
       <RouterLink v-if="!user" to="/login">Login</RouterLink>
       <RouterLink v-if="user && user.role === 0" to="/profile"

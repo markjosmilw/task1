@@ -6,7 +6,7 @@ const personalSchema = object({
   userId: number().required(),
   firstName: string().min(2).required(),
   lastName: string().min(2).required(),
-  age: number().min(1).max(150).required(),
+  age: number().min(1).max(120).required(),
   gender: string().min(4).required(),
   city: string().min(4).required(),
 });
@@ -21,14 +21,17 @@ export function useHandlePersonal(info) {
   async function handlePersonal() {
     try {
       await personalSchema.validate(info);
-      const res = await axios.post("http://localhost:8080/api/infos/personal", {
-        userId: info.userId,
-        firstName: info.firstName,
-        lastName: info.lastName,
-        age: info.age,
-        gender: info.gender,
-        city: info.city,
-      });
+      const res = await axios.post(
+        `${import.meta.env.VITE_SERVER}/api/infos/personal`,
+        {
+          userId: info.userId,
+          firstName: info.firstName,
+          lastName: info.lastName,
+          age: info.age,
+          gender: info.gender,
+          city: info.city,
+        }
+      );
       useSwal(res.data.response);
     } catch (error) {
       useSwal(
@@ -46,11 +49,14 @@ export function useHandleContact(info) {
   async function handleContact() {
     try {
       await contactSchema.validate(info);
-      const res = await axios.post("http://localhost:8080/api/infos/contact", {
-        userId: info.userId,
-        email: info.email,
-        phone: info.phone,
-      });
+      const res = await axios.post(
+        `${import.meta.env.VITE_SERVER}/api/infos/contact`,
+        {
+          userId: info.userId,
+          email: info.email,
+          phone: info.phone,
+        }
+      );
       useSwal(res.data.response);
     } catch (error) {
       useSwal(
