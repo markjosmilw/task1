@@ -9,11 +9,12 @@ const info = ref({
   firstName: "",
   lastName: "",
   age: "",
+  gender: "",
   city: "",
   email: "",
   phone: "",
 });
-//
+
 const accessToken = ref("");
 const editProfile = ref(false);
 
@@ -28,11 +29,11 @@ const fetch = async () => {
       accessToken: accessToken.value,
     });
     user.value = res.data;
-    info.value.userId = user.value.id;
     const res2 = await axios.get(
       `http://localhost:8080/api/infos/${user.value.id}`
     );
     info.value = res2.data.response;
+    info.value.userId = user.value.id;
   }
 };
 
@@ -56,7 +57,10 @@ fetch();
       </div>
       <div>
         <label for="gender">Gender</label>
-        <input type="text" v-model="info.gender" />
+        <select v-model="info.gender">
+          <option value="male">male</option>
+          <option value="female">female</option>
+        </select>
       </div>
       <div>
         <label for="city">City</label>

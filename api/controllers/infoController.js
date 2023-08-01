@@ -35,7 +35,7 @@ const updatePersonal = async (ctx) => {
     const [user] = await knex("_users").where({ id: p.userId });
     if (!user) {
       ctx.status = 404;
-      ctx.body = { response: "user not exist" };
+      ctx.body = { response: "this user does not exist" };
       return;
     }
     const [personal] = await knex("_personal").where({ userId: p.userId });
@@ -47,7 +47,7 @@ const updatePersonal = async (ctx) => {
         gender: p.gender,
         city: p.city.toLowerCase(),
       });
-      ctx.body = { response: "personal updated" };
+      ctx.body = { response: "personal information updated" };
       return;
     }
     await knex("_personal").insert({
@@ -58,7 +58,7 @@ const updatePersonal = async (ctx) => {
       gender: p.gender,
       city: p.city.toLowerCase(),
     });
-    ctx.body = { response: "personal added" };
+    ctx.body = { response: "personal information saved" };
   } catch (error) {
     ctx.status = 500;
     ctx.body = error.code
@@ -74,7 +74,7 @@ const updateContact = async (ctx) => {
     const [user] = await knex("_users").where({ id: c.userId });
     if (!user) {
       ctx.status = 404;
-      ctx.body = { response: "user not exist" };
+      ctx.body = { response: "this user does not exist" };
       return;
     }
     const [contact] = await knex("_contact").where({ userId: c.userId });
@@ -84,7 +84,7 @@ const updateContact = async (ctx) => {
         email: c.email.toLowerCase(),
         phone: c.phone,
       });
-      ctx.body = { response: "contact updated" };
+      ctx.body = { response: "contact information updated" };
       return;
     }
     await knex("_contact").insert({
@@ -92,7 +92,7 @@ const updateContact = async (ctx) => {
       email: c.email.toLowerCase(),
       phone: c.phone,
     });
-    ctx.body = { response: "contact added" };
+    ctx.body = { response: "contact information saved" };
   } catch (error) {
     ctx.status = 500;
     ctx.body = error.code

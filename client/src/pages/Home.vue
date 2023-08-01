@@ -7,7 +7,8 @@ import { fetch } from "../composables/useFetch";
 import { useHandlePersonal, useHandleContact } from "../composables/useForms";
 
 const editState = ref(false);
-const user = ref([]);
+//const user = ref([]);
+const user = ref({});
 const infos = ref([]);
 const info = ref({});
 

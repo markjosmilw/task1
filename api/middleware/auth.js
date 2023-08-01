@@ -10,7 +10,7 @@ const verifyToken = (ctx, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, "secret");
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
     ctx.request.user = decoded;
   } catch (error) {
     ctx.status = 401;

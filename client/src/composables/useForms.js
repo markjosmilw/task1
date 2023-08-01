@@ -13,7 +13,7 @@ const personalSchema = object({
 
 const contactSchema = object({
   userId: number().required(),
-  email: string().required(),
+  email: string().email().required(),
   phone: string().required().min(10).max(10),
 });
 

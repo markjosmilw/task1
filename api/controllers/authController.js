@@ -10,7 +10,7 @@ const regUser = async (ctx) => {
     const exist = await knex("_users").where({ username: u.username });
     if (exist.length > 0) {
       ctx.status = 403;
-      ctx.body = { error: "username already" };
+      ctx.body = { error: "this username has already exist" };
       return;
     }
     const hashedPw = await bcrypt.hash(u.password, 10);
@@ -18,7 +18,7 @@ const regUser = async (ctx) => {
       username: u.username,
       password: hashedPw,
     });
-    ctx.body = { response: "reg ok" };
+    ctx.body = { response: "registration succesfull" };
   } catch (error) {
     ctx.status = 500;
     ctx.body = error.code
@@ -35,17 +35,17 @@ const logUser = async (ctx) => {
     });
     if (!user) {
       ctx.status = 404;
-      ctx.body = { error: "user not exist" };
+      ctx.body = { error: "this user does not exist" };
       return;
     }
     const pwMatched = await bcrypt.compare(u.password, user.password);
     if (!pwMatched) {
       ctx.status = 403;
-      ctx.body = { error: "password not same" };
+      ctx.body = { error: "incorrect password" };
       return;
     }
-    const token = jwt.sign(user, "secret");
-    ctx.body = { response: "login ok", accessToken: token };
+    const token = jwt.sign(user, process.env.SECRET_KEY);
+    ctx.body = { response: "login successful", accessToken: token };
   } catch (error) {
     ctx.status = 500;
     ctx.body = error.code
