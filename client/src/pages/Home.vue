@@ -7,7 +7,7 @@ import { fetch } from "../composables/useFetch";
 import { useHandlePersonal, useHandleContact } from "../composables/useForms";
 
 const editState = ref(false);
-//const user = ref([]);
+const searchQuery = ref("");
 const user = ref({});
 const infos = ref([]);
 const info = ref({});
@@ -49,6 +49,20 @@ const editUser = (uid) => {
   info.value = others;
 };
 
+const handleSearch = () => {
+    const search = searchQuery.value.toLowerCase();
+    if (search === "") {
+      fetchInfos();
+    } else {
+      infos.value = infos.value.filter(
+        (info) =>
+          info.firstName.toLowerCase().includes(search) ||
+          info.city.toLowerCase().includes(search) ||
+          info.email.toLowerCase().includes(search)
+      );
+    }
+  };
+
 fetchInfos();
 </script>
 <template>
@@ -58,7 +72,13 @@ fetchInfos();
       <h1 v-if="editState">User ID: {{ info ? info.userId : "undefined" }}</h1>
       <div v-if="user && user.role === 1" class="tableContainer">
         <div v-if="!editState">
-          <h1>Data table</h1>
+          <div class="tableHeader">
+            <h1>Data table</h1>
+            <div>
+              <label for="searchInput">&#x1F50E;&#xFE0E;Search:</label>
+              <input type="text" v-model="searchQuery" @input="handleSearch" />
+            </div>
+          </div>
           <table id="customers">
             <tr>
               <th>#</th>
