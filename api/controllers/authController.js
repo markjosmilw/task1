@@ -1,5 +1,3 @@
-const knex = require("../database/knex");
-const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 //helpers
 const { findUserByUsername, createNewUser } = require("../helpers/knexService");
@@ -52,7 +50,7 @@ const logUser = async (ctx) => {
   }
 };
 
-const authTest = async (ctx) => {
+const isAuthorized = async (ctx) => {
   const { password, iat, username, deletedAt, ...user } = ctx.request.user;
   ctx.body = user;
 };
@@ -60,5 +58,5 @@ const authTest = async (ctx) => {
 module.exports = {
   regUser,
   logUser,
-  authTest,
+  isAuthorized,
 };
