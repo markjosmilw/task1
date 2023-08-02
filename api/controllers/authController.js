@@ -1,24 +1,24 @@
 const knex = require("../database/knex");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { userSchema } = require("../schemas/useSchema");
+//helpers
+const { findUserByUsername, createNewUser } = require("../helpers/knexService");
+const { joiUserSchema } = require("../helpers/joiService");
+const { validatePassword } = require("../helpers/bcryptService");
 
+//new update using knexService, joi
 const regUser = async (ctx) => {
-  const u = ctx.request.body;
+  const { username, password } = ctx.request.body;
   try {
-    await userSchema.validateAsync(u);
-    const exist = await knex("_users").where({ username: u.username });
-    if (exist.length > 0) {
+    await joiUserSchema(ctx.request.body);
+    const user = await findUserByUsername(username);
+    if (user) {
       ctx.status = 403;
       ctx.body = { error: "this username has already exist" };
       return;
     }
-    const hashedPw = await bcrypt.hash(u.password, 10);
-    await knex("_users").insert({
-      username: u.username,
-      password: hashedPw,
-    });
-    ctx.body = { response: "registration succesfull" };
+    await createNewUser(username, password);
+    ctx.body = { response: "registration successful" };
   } catch (error) {
     ctx.status = 500;
     ctx.body = error.code
@@ -28,24 +28,22 @@ const regUser = async (ctx) => {
 };
 
 const logUser = async (ctx) => {
-  const u = ctx.request.body;
+  const { username, password } = ctx.request.body;
   try {
-    const [user] = await knex("_users").where({
-      username: u.username,
-    });
+    const user = await findUserByUsername(username);
     if (!user) {
       ctx.status = 404;
       ctx.body = { error: "this user does not exist" };
       return;
     }
-    const pwMatched = await bcrypt.compare(u.password, user.password);
+    const pwMatched = await validatePassword(password, user.password);
     if (!pwMatched) {
       ctx.status = 403;
       ctx.body = { error: "incorrect password" };
       return;
     }
     const token = jwt.sign(user, process.env.SECRET_KEY);
-    ctx.body = { response: "login successful", accessToken: token };
+    ctx.body = { accessToken: token };
   } catch (error) {
     ctx.status = 500;
     ctx.body = error.code

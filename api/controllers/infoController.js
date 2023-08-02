@@ -29,36 +29,33 @@ const getInfos = async (ctx) => {
 };
 
 const updatePersonal = async (ctx) => {
-  const p = ctx.request.body;
+  //const p = ctx.request.body;
+  const { userId, firstName, lastName, age, gender, city } = ctx.request.body;
   try {
-    await personalSchema.validateAsync(p);
-    const [user] = await knex("_users").where({ id: p.userId });
-    if (!user) {
-      ctx.status = 404;
-      ctx.body = { response: "this user does not exist" };
-      return;
-    }
-    const [personal] = await knex("_personal").where({ userId: p.userId });
-    if (personal) {
-      await knex("_personal").where({ userId: p.userId }).update({
-        firstName: p.firstName.toLowerCase(),
-        lastName: p.lastName.toLowerCase(),
-        age: p.age,
-        gender: p.gender,
-        city: p.city.toLowerCase(),
-      });
-      ctx.body = { response: "personal information updated" };
-      return;
-    }
-    await knex("_personal").insert({
-      userId: p.userId,
-      firstName: p.firstName.toLowerCase(),
-      lastName: p.lastName.toLowerCase(),
-      age: p.age,
-      gender: p.gender,
-      city: p.city.toLowerCase(),
-    });
-    ctx.body = { response: "personal information saved" };
+    await personalSchema.validateAsync(ctx.request.body);
+    const user = await knex("_personal").where({ userId: userId }).first();
+    ctx.body = user
+
+    // if (personal) {
+    //   await knex("_personal").where({ userId: p.userId }).update({
+    //     firstName: p.firstName.toLowerCase(),
+    //     lastName: p.lastName.toLowerCase(),
+    //     age: p.age,
+    //     gender: p.gender,
+    //     city: p.city.toLowerCase(),
+    //   });
+    //   ctx.body = { response: "personal information updated" };
+    //   return;
+    // }
+    // await knex("_personal").insert({
+    //   userId: p.userId,
+    //   firstName: p.firstName.toLowerCase(),
+    //   lastName: p.lastName.toLowerCase(),
+    //   age: p.age,
+    //   gender: p.gender,
+    //   city: p.city.toLowerCase(),
+    // });
+    // ctx.body = { response: "personal information saved" };
   } catch (error) {
     ctx.status = 500;
     ctx.body = error.code
