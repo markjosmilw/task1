@@ -34,6 +34,9 @@ const handleReg = async () => {
       `${import.meta.env.VITE_SERVER}/api/auth/register`,
       user.value
     );
+    //createe a separate file for axios
+    //case sensity
+    //decoding in middleware for all axios request
     err.value = "";
     const ok = await useSwal(res.data.response);
     if (ok) router.push("/login");

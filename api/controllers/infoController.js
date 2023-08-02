@@ -29,15 +29,17 @@ const getInfos = async (ctx) => {
 };
 
 const updatePersonal = async (ctx) => {
-  const p = ctx.request.body;
+  // const p = ctx.request.body;
   try {
-    await personalSchema.validateAsync(p);
+    const p = await personalSchema.validateAsync(ctx.request.body);
     const [user] = await knex("_users").where({ id: p.userId });
-    if (!user) {
-      ctx.status = 404;
-      ctx.body = { response: "this user does not exist" };
-      return;
-    }
+    //no
+    // if (!user) {
+    //   ctx.status = 404;
+    //   ctx.body = { response: "this user does not exist" };
+    //   return;
+    // } session time 1 min,, databse users.. backend api for search .. merged update .. softdelete users axios one functin for all req.. service file
+//direct update
     const [personal] = await knex("_personal").where({ userId: p.userId });
     if (personal) {
       await knex("_personal").where({ userId: p.userId }).update({
