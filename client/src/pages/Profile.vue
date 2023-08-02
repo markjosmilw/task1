@@ -10,16 +10,7 @@ onMounted(() => {
 
 const router = useRouter();
 const user = ref({});
-const info = ref({
-  userId: "",
-  firstName: "",
-  lastName: "",
-  age: "",
-  gender: "",
-  city: "",
-  email: "",
-  phone: "",
-});
+const info = ref({});
 
 const accessToken = ref("");
 const editProfile = ref(false);
@@ -30,19 +21,23 @@ watch(editProfile, () => {
 
 const fetch = async () => {
   accessToken.value = localStorage.getItem("accessToken");
-  if (!accessToken.value) {
-    router.push("/login");
-    return;
-  }
+  // if (!accessToken.value) {
+  //   router.push("/login");
+  //   return;
+  // }
   const res = await axios.post(`${import.meta.env.VITE_SERVER}/api/jwt`, {
     accessToken: accessToken.value,
   });
   user.value = res.data;
-  const res2 = await axios.get(
+  const userInfo = await axios.get(
     `${import.meta.env.VITE_SERVER}/api/infos/${user.value.id}`
   );
-  info.value = res2.data.response;
-  info.value.userId = user.value.id;
+  info.value = userInfo.data.response;
+  // const res2 = await axios.get(
+  //   `${import.meta.env.VITE_SERVER}/api/infos/${user.value.id}`
+  // );
+  // info.value = res2.data.response;
+  // info.value.userId = user.value.id;
 };
 </script>
 <template>

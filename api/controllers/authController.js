@@ -53,7 +53,7 @@ const logUser = async (ctx) => {
 };
 
 const authTest = async (ctx) => {
-  const { password, iat, ...user } = ctx.request.user;
+  const { password, iat, username, deletedAt, ...user } = ctx.request.user;
   ctx.body = user;
 };
 

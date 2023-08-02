@@ -2,76 +2,69 @@
 import { ref, onMounted, watch } from "vue";
 import axios from "axios";
 import _ from "lodash";
-import swal from "sweetalert";
 import { fetch } from "../composables/useFetch";
 import { useHandlePersonal, useHandleContact } from "../composables/useForms";
 
-const editState = ref(false);
-const searchQuery = ref("");
+//const editState = ref(false);
+// const searchQuery = ref("");
 const user = ref({});
-const infos = ref([]);
-const info = ref({});
+// const infos = ref([]);
+//const info = ref({});
 
 onMounted(async () => {
   user.value = await fetch();
 });
 
-watch(editState, () => {
-  fetchInfos();
-});
+// async function test() {
+//   const user = await axios.get('')
 
-const fetchInfos = async () => {
-  const res = await axios.get(`${import.meta.env.VITE_SERVER}/api/infos`);
-  infos.value = _.filter(
-    res.data.response,
-    (info) => info.email !== null && info.firstName !== null
-  );
-};
+// watch(editState, () => {
+//   fetchInfos();
+// });
 
-const deleteUser = async (uid) => {
-  try {
-    const e = await swal(`Are you sure you want to delete this user?`, {
-      buttons: ["no", "yes"],
-    });
-    if (e) {
-      const res = await axios.delete(`${import.meta.env.VITE_SERVER}/api/infos/${uid}`);
-      fetchInfos();
-      swal("Deleted!", res.data.response, "success");
-    }
-  } catch (error) {
-    console.log(error);
-  }
-};
 
-const editUser = (uid) => {
-  editState.value = true;
-  const cont = _.find(infos.value, { userId: uid });
-  const { password, ...others } = cont;
-  info.value = others;
-};
+// const deleteUser = async (uid) => {
+//   try {
+//     const e = await swal(`Are you sure you want to delete this user?`, {
+//       buttons: ["no", "yes"],
+//     });
+//     if (e) {
+//       const res = await axios.delete(`${import.meta.env.VITE_SERVER}/api/infos/${uid}`);
+//       fetchInfos();
+//       swal("Deleted!", res.data.response, "success");
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
-const handleSearch = () => {
-  const search = searchQuery.value.toLowerCase();
-  if (search === "") {
-    fetchInfos();
-  } else {
-    infos.value = infos.value.filter(
-      (info) =>
-        info.firstName.toLowerCase().includes(search) ||
-        info.city.toLowerCase().includes(search) ||
-        info.email.toLowerCase().includes(search)
-    );
-  }
-};
+// const editUser = (uid) => {
+//   editState.value = true;
+//   const cont = _.find(infos.value, { userId: uid });
+//   const { password, ...others } = cont;
+//   info.value = others;
+// };
 
-fetchInfos();
+// const handleSearch = () => {
+//   const search = searchQuery.value.toLowerCase();
+//   if (search === "") {
+//     fetchInfos();
+//   } else {
+//     infos.value = infos.value.filter(
+//       (info) =>
+//         info.firstName.toLowerCase().includes(search) ||
+//         info.city.toLowerCase().includes(search) ||
+//         info.email.toLowerCase().includes(search)
+//     );
+//   }
+// };
+
 </script>
 <template>
   <div class="container">
     <div class="landing">
-      <h1 v-if="!editState">Hello {{ user ? user.username : "visitor" }}</h1>
-      <h1 v-if="editState">User ID: {{ info ? info.userId : "undefined" }}</h1>
-      <div v-if="user && user.role === 1" class="tableContainer">
+      <h1>Hello {{ user ? user.username : "visitor" }}</h1>
+      <!-- <div v-if="user && user.role === 1" class="tableContainer">
         <div v-if="!editState">
           <div class="tableHeader">
             <h1>Data table</h1>
@@ -167,7 +160,7 @@ fetchInfos();
             </button>
           </form>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

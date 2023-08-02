@@ -32,7 +32,7 @@ const handleLogout = async () => {
       <RouterLink to="/contact">Contact us</RouterLink>
       <RouterLink v-if="!user" to="/register">Register</RouterLink>
       <RouterLink v-if="!user" to="/login">Login</RouterLink>
-      <RouterLink v-if="user && user.role === 0" to="/profile"
+      <RouterLink v-if="user && user.isAdmin === 0" to="/profile"
         >Profile</RouterLink
       >
       <RouterLink v-if="user" @click="handleLogout" to="/">Logout</RouterLink>
