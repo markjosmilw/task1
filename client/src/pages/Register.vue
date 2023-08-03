@@ -31,7 +31,7 @@ const handleReg = async () => {
   try {
     await userSchema.validate(user.value);
     const res = await axios.post(
-      `${import.meta.env.VITE_SERVER}/api/auth/register`,
+      `${import.meta.env.VITE_SERVER}/api/users/register`,
       user.value
     );
     err.value = "";

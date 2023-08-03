@@ -2,6 +2,9 @@
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
+import { useProfileStore } from "../store/useProfileStore";
+
+const store = useProfileStore();
 
 onMounted(() => {
   const accessToken = localStorage.getItem("accessToken");
@@ -23,7 +26,7 @@ const err = ref("");
 const handleLogin = async () => {
   try {
     const res = await axios.post(
-      `${import.meta.env.VITE_SERVER}/api/auth/login`,
+      `${import.meta.env.VITE_SERVER}/api/users/login`,
       user.value
     );
     localStorage.setItem("accessToken", res.data.accessToken);
@@ -32,6 +35,7 @@ const handleLogin = async () => {
   } catch (error) {
     err.value = error.response.data.error;
   }
+  store.fetch();
 };
 </script>
 <template>

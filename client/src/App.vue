@@ -1,6 +1,11 @@
 <script setup>
+import { watch } from "vue";
 import Navbar from "./components/Navbar.vue";
-import { RouterView } from "vue-router";
+import { RouterView, useRoute } from "vue-router";
+import { useProfileStore } from "./store/useProfileStore";
+
+const store = useProfileStore();
+store.fetch();
 </script>
 
 <template>

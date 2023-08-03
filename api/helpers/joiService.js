@@ -6,7 +6,7 @@ const userSchema = Joi.object({
 });
 
 const personalSchema = Joi.object({
-  userId: Joi.number().required(),
+  userId: Joi.number(),
   firstName: Joi.string().min(2).required(),
   lastName: Joi.string().min(2).required(),
   age: Joi.number().min(1).max(120).required(),
@@ -15,15 +15,29 @@ const personalSchema = Joi.object({
 });
 
 const contactSchema = Joi.object({
-  userId: Joi.number().required(),
+  userId: Joi.number(),
   email: Joi.string().required().email(),
-  phone: Joi.number().required(),
+  phone: Joi
+    .string()
+    .regex(/^[0-9]{10}$/)
+    .messages({ "string.pattern.base": `Phone number must have 10 digits.` })
+    .required(),
 });
 
 async function joiUserSchema(user) {
   return userSchema.validateAsync(user);
 }
 
+async function joiPersonalSchema(personal) {
+  return personalSchema.validateAsync(personal);
+}
+
+async function joiContactSchema(contact) {
+  return contactSchema.validateAsync(contact);
+}
+
 module.exports = {
   joiUserSchema,
+  joiPersonalSchema,
+  joiContactSchema,
 };

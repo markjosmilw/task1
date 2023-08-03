@@ -2,18 +2,20 @@
 import { ref, onMounted, watch } from "vue";
 import axios from "axios";
 import _ from "lodash";
-import { fetch } from "../composables/useFetch";
+import { useRouter } from "vue-router";
 import { useHandlePersonal, useHandleContact } from "../composables/useForms";
 
+import { useProfileStore } from "../store/useProfileStore";
 //const editState = ref(false);
 // const searchQuery = ref("");
-const user = ref({});
+const userInfo = ref({});
+const store = useProfileStore();
 // const infos = ref([]);
 //const info = ref({});
 
-onMounted(async () => {
-  user.value = await fetch();
-});
+// onMounted(async () => {
+//   user.value = await fetch();
+// });
 
 // async function test() {
 //   const user = await axios.get('')
@@ -21,7 +23,6 @@ onMounted(async () => {
 // watch(editState, () => {
 //   fetchInfos();
 // });
-
 
 // const deleteUser = async (uid) => {
 //   try {
@@ -58,12 +59,29 @@ onMounted(async () => {
 //     );
 //   }
 // };
-
+// async function fetch() {
+//   const accessToken = localStorage.getItem("accessToken");
+//   if (!accessToken) {
+//     return;
+//   }
+//   try {
+//     const res = await axios.get(
+//       `${import.meta.env.VITE_SERVER}/api/infos/personal`,
+//       { headers: { Authorization: `Bearer ${accessToken}` } }
+//     );
+//     userInfo.value = res.data.response;
+//   } catch (error) {
+//     forceLogout();
+//     console.log(error.response.data.error);
+//   }
+// }
+//fetch();
 </script>
 <template>
   <div class="container">
     <div class="landing">
-      <h1>Hello {{ user ? user.username : "visitor" }}</h1>
+      <h1>Hello {{ userInfo ? store.getFirstName : "visitor" }}</h1>
+      <h1>{{ store.getMax }}</h1>
       <!-- <div v-if="user && user.role === 1" class="tableContainer">
         <div v-if="!editState">
           <div class="tableHeader">

@@ -11,7 +11,8 @@ const verifyToken = (ctx, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    ctx.request.user = decoded;
+    const { password, iat, username, deletedAt, ...user } = decoded;
+    ctx.request.user = user;
   } catch (error) {
     ctx.status = 401;
     ctx.body = { error: "invalid token" };

@@ -1,12 +1,20 @@
 const Router = require("koa-router");
 const router = new Router();
 
-const { regUser, logUser, isAuthorized } = require("../controllers/authController");
+const {
+  regUser,
+  logUser,
+  deleteUser,
+  isAuthorized,
+} = require("../controllers/userController");
+
 const auth = require("../middleware/auth");
 
-router.post("/api/auth/register", regUser);
-router.post("/api/auth/login", logUser);
+router.post("/api/users/register", regUser);
+router.post("/api/users/login", logUser);
 
-router.post("/api/jwt", auth, isAuthorized);
+router.patch("/api/users/:id", deleteUser);
+
+router.post("/api/jwt", auth, isAuthorized); 
 
 module.exports = router;
