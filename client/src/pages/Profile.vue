@@ -1,58 +1,16 @@
 <script setup>
-import { ref, watch, onMounted } from "vue";
-import axios from "axios";
-import { useHandlePersonal, useHandleContact } from "../composables/useForms";
-import { useRouter } from "vue-router";
-
+import { ref, watch } from "vue";
 import { useProfileStore } from "../store/useProfileStore";
+
 const store = useProfileStore();
-
-// onMounted(() => {
-//   fetch();
-// });
-
-// const router = useRouter();
-// const user = ref({});
 const personalInfo = ref({});
 const contactInfo = ref({});
-
-// const accessToken = ref("");
 const editProfile = ref(false);
 
 watch(editProfile, () => {
-  personalInfo.value = store.getProfileInfo;
+  personalInfo.value = store.getPersonalInfo;
   contactInfo.value = store.getContactInfo;
 });
-
-function handleProfileForm() {
-  // const accessToken = localStorage.getItem("accessToken");
-  // if (!accessToken) {
-  //   return;
-  // }
-  // try {
-  // } catch (error) {}
-}
-
-// const fetch = async () => {
-//   accessToken.value = localStorage.getItem("accessToken");
-//   // if (!accessToken.value) {
-//   //   router.push("/login");
-//   //   return;
-//   // }
-//   const res = await axios.post(`${import.meta.env.VITE_SERVER}/api/jwt`, {
-//     accessToken: accessToken.value,
-//   });
-//   user.value = res.data;
-//   const userInfo = await axios.get(
-//     `${import.meta.env.VITE_SERVER}/api/infos/${user.value.id}`
-//   );
-//   info.value = userInfo.data.response;
-//   // const res2 = await axios.get(
-//   //   `${import.meta.env.VITE_SERVER}/api/infos/${user.value.id}`
-//   // );
-//   // info.value = res2.data.response;
-//   // info.value.userId = user.value.id;
-// };
 </script>
 <template>
   <div class="container">
@@ -89,9 +47,6 @@ function handleProfileForm() {
         <label for="lastName">Phone</label>
         <input type="text" v-model="contactInfo.phone" />
       </div>
-      <button @click.prevent="editProfile = !editProfile" class="return">
-        return
-      </button>
       <div>
         <input
           type="submit"
@@ -100,19 +55,22 @@ function handleProfileForm() {
           value="update"
         />
       </div>
+      <button @click.prevent="editProfile = !editProfile" class="return">
+        return
+      </button>
     </form>
     <div v-else class="card">
       <img src="../assets/profile.jpg" style="width: 100%" />
-      <p>User ID: {{ store.getProfileInfo.userId }}</p>
+      <p><span>User ID:</span> {{ store.getPersonalInfo.userId }}</p>
       <h2>Personal Information</h2>
-      <p>First name: {{ store.getProfileInfo.firstName }}</p>
-      <p>Last name: {{ store.getProfileInfo.lastName }}</p>
-      <p>Age: {{ store.getProfileInfo.age }}</p>
-      <p>Gender: {{ store.getProfileInfo.gender }}</p>
-      <p>City: {{ store.getProfileInfo.city }}</p>
+      <p><span>First name:</span> {{ store.getPersonalInfo.firstName }}</p>
+      <p><span>Last name:</span> {{ store.getPersonalInfo.lastName }}</p>
+      <p><span>Age:</span> {{ store.getPersonalInfo.age }}</p>
+      <p><span>Gender:</span> {{ store.getPersonalInfo.gender }}</p>
+      <p><span>City:</span> {{ store.getPersonalInfo.city }}</p>
       <h2>Contact Information</h2>
-      <p>Email: {{ store.getContactInfo.email }}</p>
-      <p>Contact #: {{ store.getContactInfo.phone }}</p>
+      <p><span>Email:</span> {{ store.getContactInfo.email }}</p>
+      <p><span>Phone #:</span> {{ store.getContactInfo.phone }}</p>
       <p>
         <button @click="editProfile = !editProfile">Edit your profile</button>
       </p>

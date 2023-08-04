@@ -83,7 +83,7 @@ const userInfo = ref({});
     <div class="landing">
       <h1>
         Hello
-        {{ store.getFirstName ? store.getFirstName : "visitor" }}
+        {{ store.getTimeRemaining ? store.getFirstName : "visitor" }}
       </h1>
       <!-- <div v-if="user && user.role === 1" class="tableContainer">
         <div v-if="!editState">

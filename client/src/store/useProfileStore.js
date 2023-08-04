@@ -3,21 +3,21 @@ import axios from "axios";
 
 export const useProfileStore = defineStore("profile", {
   state: () => ({
-    profileInfo: {},
+    personalInfo: {},
     contactInfo: {},
     timeRemaining: 0,
   }),
   getters: {
-    getProfileInfo: (state) => state.profileInfo,
+    getPersonalInfo: (state) => state.personalInfo,
     getContactInfo: (state) => state.contactInfo,
-    getFirstName: (state) => state.profileInfo.firstName,
+    getFirstName: (state) => state.personalInfo.firstName,
     getTimeRemaining: (state) => state.timeRemaining,
   },
   actions: {
     async fetch() {
       const accessToken = localStorage.getItem("accessToken");
       if (!accessToken) {
-        this.profileInfo = {};
+        this.personalInfo = {};
         return;
       }
       try {
@@ -25,7 +25,7 @@ export const useProfileStore = defineStore("profile", {
           `${import.meta.env.VITE_SERVER}/api/infos/personal`,
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
-        this.profileInfo = res.data.response;
+        this.personalInfo = res.data.response;
         this.contactInfo = res.data.contact;
         this.timeRemaining = res.data.timeRemaining;
       } catch (error) {
@@ -36,7 +36,7 @@ export const useProfileStore = defineStore("profile", {
     async updateProfile(personalInfo, contactInfo) {
       const accessToken = localStorage.getItem("accessToken");
       if (!accessToken) {
-        this.profileInfo = {};
+        this.personalInfo = {};
         return;
       }
       try {
@@ -51,7 +51,7 @@ export const useProfileStore = defineStore("profile", {
           contactInfo,
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
-        alert("profile updated successfully");
+        await alert("profile updated successfully");
       } catch (error) {
         alert(error.response.data.error);
       }
