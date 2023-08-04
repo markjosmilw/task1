@@ -4,11 +4,12 @@ import axios from "axios";
 export const useProfileStore = defineStore("profile", {
   state: () => ({
     profileInfo: {},
+    timeRemaining: 0,
   }),
   getters: {
     getProfileInfo: (state) => state.profileInfo,
     getFirstName: (state) => state.profileInfo.firstName,
-    getMax: (state) => state.max,
+    getTimeRemaining: (state) => state.timeRemaining,
   },
   actions: {
     async fetch() {
@@ -23,10 +24,11 @@ export const useProfileStore = defineStore("profile", {
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
         this.profileInfo = res.data.response;
-        setTimeout(function () {
-          localStorage.removeItem("accessToken");
-          alert("session timeout");
-        }, 60000);
+        this.timeRemaining = res.data.timeRemaining;
+        // setTimeout(function () {
+        //   localStorage.removeItem("accessToken");
+        //   alert("session timeout");
+        // }, 60000);
       } catch (error) {
         console.log(error.response.data.error);
         localStorage.removeItem("accessToken");

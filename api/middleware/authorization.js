@@ -18,12 +18,15 @@ const verifyUser = (ctx, next) => {
     }
     const setExpired = decoded.exp;
     const now = Math.floor(Date.now() / 1000) + 60 * 60;
-    if (now - setExpired > 60) {
-      ctx.status = 401;
-      ctx.body = { error: "token has expired already" };
-      return;
-    }
+    const timeRemaining = 60 - (now - setExpired);
+    // if (timeRemaining < 0) {
+    //   ctx.status = 401;
+    //   ctx.body = { error: "token has expired already" };
+    //   return;
+    // }
     ctx.request.userId = decoded.data;
+    ctx.request.timeRemaining = timeRemaining;
+    //ctx.request.timeRemaining = decoded.data;
   } catch (error) {
     ctx.status = 401;
     ctx.body = { error: "token invalid" };

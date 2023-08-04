@@ -38,9 +38,10 @@ const getInfos = async (ctx) => {
 
 const getPersonal = async (ctx) => {
   //explain
+  const timeRemaining = ctx.request.timeRemaining
   const userId = ctx.request.userId;
   const personalInfo = await getPersonalInfoById(userId);
-  ctx.body = { response: personalInfo };
+  ctx.body = { response: personalInfo, timeRemaining: timeRemaining };
 };
 
 const updatePersonal = async (ctx) => {
