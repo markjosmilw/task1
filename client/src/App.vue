@@ -6,7 +6,6 @@ import { useProfileStore } from "./store/useProfileStore";
 
 const route = useRoute();
 const store = useProfileStore();
-//store.fetch();
 
 watch(route, () => {
   store.fetch();

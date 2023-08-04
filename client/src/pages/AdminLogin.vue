@@ -6,14 +6,6 @@ import { useProfileStore } from "../store/useProfileStore";
 
 const store = useProfileStore();
 
-// onMounted(() => {
-//   const accessToken = localStorage.getItem("accessToken");
-//   if (accessToken) {
-//     router.push("/");
-//     return;
-//   }
-// });
-
 const router = useRouter();
 
 const user = ref({
@@ -35,13 +27,12 @@ const handleLogin = async () => {
   } catch (error) {
     err.value = error.response.data.error;
   }
-  store.fetch();
 };
 </script>
 <template>
   <div class="container">
     <form class="form">
-      <h1>Login</h1>
+      <h1>Admin Login</h1>
       <div>
         <label for="username">Username</label>
         <input type="text" v-model="user.username" />

@@ -6,7 +6,7 @@ const {
   updatePersonal,
   updateContact,
   getInfos,
-  getPersonal,
+  getProfile,
 } = require("../controllers/infoController");
 
 const { verifyUser } = require("../middleware/authorization");
@@ -18,7 +18,7 @@ router.put("/api/admin/infos/personal", updatePersonal);
 router.put("/api/admin/infos/contact", updateContact);
 
 //with middleware for user
-router.get("/api/infos/personal", verifyUser, getPersonal);
+router.get("/api/infos/personal", verifyUser, getProfile);
 router.put('/api/infos/personal', verifyUser, updatePersonal)
 router.put('/api/infos/contact', verifyUser, updateContact)
 

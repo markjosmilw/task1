@@ -37,14 +37,27 @@ const getInfos = async (ctx) => {
   // }
 };
 
-const getPersonal = async (ctx) => {
+const getProfileInfos = async (ctx) => {
+  try {
+    const users = await knex("_users")
+      .where({ role: "0" })
+      .leftJoin("_personal", { "_personal.userId": "_users.id" })
+      .leftJoin("_contact", { "_contact.userId": "_users.id" });
+    ctx.body = { response: users };
+  } catch (error) {
+    ctx.status = 500;
+    ctx.body = { error: error };
+  }
+};
+
+const getProfile = async (ctx) => {
   //explain
   const timeRemaining = ctx.request.timeRemaining;
   const userId = ctx.request.userId;
   const personalInfo = await getPersonalInfoById(userId);
   const contactInfo = await getContactInfoById(userId);
   ctx.body = {
-    response: personalInfo,
+    profile: personalInfo,
     contact: contactInfo,
     timeRemaining: timeRemaining,
   };
@@ -80,12 +93,10 @@ const updateContact = async (ctx) => {
   }
 };
 
-
-
 module.exports = {
   getAll,
   getInfos,
-  getPersonal,
+  getProfile,
   updatePersonal,
   updateContact,
 };
