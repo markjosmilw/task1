@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import axios from "axios";
-import { useRouter } from "vue-router";
 
 export const useProfileStore = defineStore("profile", {
   state: () => ({
@@ -31,7 +30,6 @@ export const useProfileStore = defineStore("profile", {
       } catch (error) {
         console.log(error.response.data.error);
         localStorage.removeItem("accessToken");
-        router.push("/login");
       }
     },
   },

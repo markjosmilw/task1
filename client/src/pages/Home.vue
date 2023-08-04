@@ -6,10 +6,11 @@ import { useRouter } from "vue-router";
 import { useHandlePersonal, useHandleContact } from "../composables/useForms";
 
 import { useProfileStore } from "../store/useProfileStore";
+const store = useProfileStore();
 //const editState = ref(false);
 // const searchQuery = ref("");
 const userInfo = ref({});
-const store = useProfileStore();
+
 // const infos = ref([]);
 //const info = ref({});
 
@@ -80,8 +81,7 @@ const store = useProfileStore();
 <template>
   <div class="container">
     <div class="landing">
-      <h1>Hello {{ userInfo ? store.getFirstName : "visitor" }}</h1>
-      <h1>{{ store.getMax }}</h1>
+      <h1>Hello {{ store.getFirstName ? store.getFirstName : "visitor" }}</h1>
       <!-- <div v-if="user && user.role === 1" class="tableContainer">
         <div v-if="!editState">
           <div class="tableHeader">

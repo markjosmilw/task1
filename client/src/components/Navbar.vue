@@ -4,23 +4,26 @@ import { fetch } from "../composables/useFetch";
 import { RouterLink } from "vue-router";
 import { useRouter, useRoute } from "vue-router";
 
+import { useProfileStore } from "../store/useProfileStore";
+const store = useProfileStore();
 
-const route = useRoute();
+// const route = useRoute();
 
-watch(route, (route) => {
-  refresh();
-});
+// watch(route, (route) => {
+//   refresh();
+// });
 
-async function refresh() {
-  const r = await fetch();
-  user.value = r;
-}
+// async function refresh() {
+//   const r = await fetch();
+//   user.value = r;
+// }
 
 const router = useRouter();
-const user = ref([]);
+// const user = ref([]);
 
 const handleLogout = async () => {
   localStorage.removeItem("accessToken");
+  store.profileInfo = {}
   router.push("/login");
 };
 </script>
@@ -30,12 +33,12 @@ const handleLogout = async () => {
     <div class="nav">
       <RouterLink to="/about">About us</RouterLink>
       <RouterLink to="/contact">Contact us</RouterLink>
-      <RouterLink v-if="!user" to="/register">Register</RouterLink>
-      <RouterLink v-if="!user" to="/login">Login</RouterLink>
-      <RouterLink v-if="user && user.isAdmin === 0" to="/profile"
+      <RouterLink v-if="!store.getFirstName" to="/register">Register</RouterLink>
+      <RouterLink v-if="!store.getFirstName" to="/login">Login</RouterLink>
+      <RouterLink v-if="store.getFirstName" to="/profile"
         >Profile</RouterLink
       >
-      <RouterLink v-if="user" @click="handleLogout" to="/">Logout</RouterLink>
+      <RouterLink v-if="store.getFirstName" @click="handleLogout" to="/">Logout</RouterLink>
     </div>
   </div>
 </template>
