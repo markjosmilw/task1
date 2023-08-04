@@ -6,9 +6,10 @@ import { useProfileStore } from "./store/useProfileStore";
 
 const route = useRoute();
 const store = useProfileStore();
-store.fetch();
+//store.fetch();
 
 watch(route, () => {
+  store.fetch();
   var timer = setInterval(function () {
     const time = store.getTimeRemaining;
     store.fetch();

@@ -19,7 +19,7 @@ router.put("/api/admin/infos/contact", updateContact);
 
 //with middleware for user
 router.get("/api/infos/personal", verifyUser, getPersonal);
-router.put('/api/infos/personal/:id', verifyUser, updatePersonal)
-router.put('/api/infos/contact/:id', verifyUser, updateContact)
+router.put('/api/infos/personal', verifyUser, updatePersonal)
+router.put('/api/infos/contact', verifyUser, updateContact)
 
 module.exports = router;

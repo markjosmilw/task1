@@ -7,6 +7,7 @@ const {
   updatePersonalInfo,
   updateContactInfo,
   getPersonalInfoById,
+  getContactInfoById,
 } = require("../helpers/knexService");
 
 const getAll = async (ctx) => {
@@ -38,16 +39,20 @@ const getInfos = async (ctx) => {
 
 const getPersonal = async (ctx) => {
   //explain
-  const timeRemaining = ctx.request.timeRemaining
+  const timeRemaining = ctx.request.timeRemaining;
   const userId = ctx.request.userId;
   const personalInfo = await getPersonalInfoById(userId);
-  ctx.body = { response: personalInfo, timeRemaining: timeRemaining };
+  const contactInfo = await getContactInfoById(userId);
+  ctx.body = {
+    response: personalInfo,
+    contact: contactInfo,
+    timeRemaining: timeRemaining,
+  };
 };
 
 const updatePersonal = async (ctx) => {
   //explain
-  let { userId, firstName, lastName, age, gender, city } = ctx.request.body;
-  if (!userId) userId = ctx.request.params.id;
+  const { userId, firstName, lastName, age, gender, city } = ctx.request.body;
   try {
     await joiPersonalSchema(ctx.request.body);
     await updatePersonalInfo(userId, firstName, lastName, age, gender, city);
@@ -62,8 +67,7 @@ const updatePersonal = async (ctx) => {
 
 const updateContact = async (ctx) => {
   //explain
-  let { userId, email, phone } = ctx.request.body;
-  if (!userId) userId = ctx.request.params.id;
+  const { userId, email, phone } = ctx.request.body;
   try {
     await joiContactSchema(ctx.request.body);
     await updateContactInfo(userId, email, phone);
@@ -75,6 +79,8 @@ const updateContact = async (ctx) => {
       : { error: error.details[0].message };
   }
 };
+
+
 
 module.exports = {
   getAll,

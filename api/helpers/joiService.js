@@ -17,8 +17,7 @@ const personalSchema = Joi.object({
 const contactSchema = Joi.object({
   userId: Joi.number(),
   email: Joi.string().required().email(),
-  phone: Joi
-    .string()
+  phone: Joi.string()
     .regex(/^[0-9]{10}$/)
     .messages({ "string.pattern.base": `Phone number must have 10 digits.` })
     .required(),
@@ -35,6 +34,7 @@ async function joiPersonalSchema(personal) {
 async function joiContactSchema(contact) {
   return contactSchema.validateAsync(contact);
 }
+
 
 module.exports = {
   joiUserSchema,

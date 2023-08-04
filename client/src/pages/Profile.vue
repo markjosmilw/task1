@@ -4,116 +4,119 @@ import axios from "axios";
 import { useHandlePersonal, useHandleContact } from "../composables/useForms";
 import { useRouter } from "vue-router";
 
-onMounted(() => {
-  fetch();
-});
+import { useProfileStore } from "../store/useProfileStore";
+const store = useProfileStore();
 
-const router = useRouter();
-const user = ref({});
-const info = ref({});
+// onMounted(() => {
+//   fetch();
+// });
 
-const accessToken = ref("");
+// const router = useRouter();
+// const user = ref({});
+const personalInfo = ref({});
+const contactInfo = ref({});
+
+// const accessToken = ref("");
 const editProfile = ref(false);
 
 watch(editProfile, () => {
-  fetch();
+  personalInfo.value = store.getProfileInfo;
+  contactInfo.value = store.getContactInfo;
 });
 
-const fetch = async () => {
-  accessToken.value = localStorage.getItem("accessToken");
-  // if (!accessToken.value) {
-  //   router.push("/login");
+function handleProfileForm() {
+  // const accessToken = localStorage.getItem("accessToken");
+  // if (!accessToken) {
   //   return;
   // }
-  const res = await axios.post(`${import.meta.env.VITE_SERVER}/api/jwt`, {
-    accessToken: accessToken.value,
-  });
-  user.value = res.data;
-  const userInfo = await axios.get(
-    `${import.meta.env.VITE_SERVER}/api/infos/${user.value.id}`
-  );
-  info.value = userInfo.data.response;
-  // const res2 = await axios.get(
-  //   `${import.meta.env.VITE_SERVER}/api/infos/${user.value.id}`
-  // );
-  // info.value = res2.data.response;
-  // info.value.userId = user.value.id;
-};
+  // try {
+  // } catch (error) {}
+}
+
+// const fetch = async () => {
+//   accessToken.value = localStorage.getItem("accessToken");
+//   // if (!accessToken.value) {
+//   //   router.push("/login");
+//   //   return;
+//   // }
+//   const res = await axios.post(`${import.meta.env.VITE_SERVER}/api/jwt`, {
+//     accessToken: accessToken.value,
+//   });
+//   user.value = res.data;
+//   const userInfo = await axios.get(
+//     `${import.meta.env.VITE_SERVER}/api/infos/${user.value.id}`
+//   );
+//   info.value = userInfo.data.response;
+//   // const res2 = await axios.get(
+//   //   `${import.meta.env.VITE_SERVER}/api/infos/${user.value.id}`
+//   // );
+//   // info.value = res2.data.response;
+//   // info.value.userId = user.value.id;
+// };
 </script>
 <template>
   <div class="container">
     <form v-if="editProfile" class="form">
-      <h1>Personal Information</h1>
+      <h1>Profile Information</h1>
       <div>
         <label for="firstName">First Name</label>
-        <input type="text" v-model="info.firstName" />
+        <input type="text" v-model="personalInfo.firstName" />
       </div>
       <div>
         <label for="lastName">Last Name</label>
-        <input type="text" v-model="info.lastName" />
+        <input type="text" v-model="personalInfo.lastName" />
       </div>
       <div>
         <label for="age">Age</label>
-        <input type="number" v-model="info.age" />
+        <input type="number" v-model="personalInfo.age" />
       </div>
       <div>
         <label for="gender">Gender</label>
-        <select v-model="info.gender">
+        <select v-model="personalInfo.gender">
           <option value="male">male</option>
           <option value="female">female</option>
         </select>
       </div>
       <div>
         <label for="city">City</label>
-        <input type="text" v-model="info.city" />
+        <input type="text" v-model="personalInfo.city" />
       </div>
+      <div>
+        <label for="firstName">Email</label>
+        <input type="text" v-model="contactInfo.email" />
+      </div>
+      <div>
+        <label for="lastName">Phone</label>
+        <input type="text" v-model="contactInfo.phone" />
+      </div>
+      <button @click.prevent="editProfile = !editProfile" class="return">
+        return
+      </button>
       <div>
         <input
           type="submit"
-          @click.prevent="useHandlePersonal(info)"
+          @click.prevent="store.updateProfile(personalInfo, contactInfo)"
           class="button"
-          :value="info.id ? 'update' : 'save'"
+          value="update"
         />
       </div>
     </form>
     <div v-else class="card">
       <img src="../assets/profile.jpg" style="width: 100%" />
-      <p>User ID: {{ user.id }}</p>
+      <p>User ID: {{ store.getProfileInfo.userId }}</p>
       <h2>Personal Information</h2>
-      <p>First name: {{ info.firstName }}</p>
-      <p>Last name: {{ info.lastName }}</p>
-      <p>Age: {{ info.age }}</p>
-      <p>Gender: {{ info.gender }}</p>
-      <p>City: {{ info.city }}</p>
+      <p>First name: {{ store.getProfileInfo.firstName }}</p>
+      <p>Last name: {{ store.getProfileInfo.lastName }}</p>
+      <p>Age: {{ store.getProfileInfo.age }}</p>
+      <p>Gender: {{ store.getProfileInfo.gender }}</p>
+      <p>City: {{ store.getProfileInfo.city }}</p>
       <h2>Contact Information</h2>
-      <p>Email: {{ info.email }}</p>
-      <p>Contact #: {{ info.phone }}</p>
+      <p>Email: {{ store.getContactInfo.email }}</p>
+      <p>Contact #: {{ store.getContactInfo.phone }}</p>
       <p>
         <button @click="editProfile = !editProfile">Edit your profile</button>
       </p>
     </div>
-    <form v-if="editProfile" class="form">
-      <h1>Contact Information</h1>
-      <div>
-        <label for="firstName">Email</label>
-        <input type="text" v-model="info.email" />
-      </div>
-      <div>
-        <label for="lastName">Phone</label>
-        <input type="text" v-model="info.phone" />
-      </div>
-      <div>
-        <input
-          type="submit"
-          @click.prevent="useHandleContact(info)"
-          class="button"
-          :value="info.id ? 'update' : 'save'"
-        />
-      </div>
-      <button @click.prevent="editProfile = !editProfile" class="return">
-        return
-      </button>
-    </form>
   </div>
 </template>
 <style scoped lang="scss">

@@ -31,7 +31,17 @@ async function deleteUserById(id) {
 }
 
 async function getPersonalInfoById(userId) {
-  return await knex("_personal").where({ userId: userId }).first();
+  return await knex("_personal")
+    .select("userId", "firstName", "lastName", "age", "gender", "city")
+    .where({ userId: userId })
+    .first();
+}
+
+async function getContactInfoById(userId) {
+  return await knex("_contact")
+    .select("userId", "email", "phone")
+    .where({ userId: userId })
+    .first();
 }
 
 async function updatePersonalInfo(
@@ -58,11 +68,13 @@ async function updateContactInfo(userId, email, phone) {
   });
 }
 
+
 module.exports = {
   findUserByUsername,
   createNewUser,
   deleteUserById,
   getPersonalInfoById,
   updatePersonalInfo,
+  getContactInfoById,
   updateContactInfo,
 };
