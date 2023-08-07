@@ -83,6 +83,21 @@ async function updateContactInfo(userId, email, phone) {
   });
 }
 
+async function updateProfileInfo(userId, firstName, lastName, age, gender, city, email, phone) {
+  await knex("_personal").where({ userId: userId }).update({
+    firstName: firstName,
+    lastName: lastName,
+    age: age,
+    gender: gender,
+    city: city,
+  });
+  await knex("_contact").where({ userId: userId }).update({
+    email: email,
+    phone: phone,
+  });
+  return;
+}
+
 async function findAdminByUsername(username) {
   return await knex("_users").where({ username: username, isAdmin: 1 }).first();
 }
@@ -98,4 +113,5 @@ module.exports = {
   updateContactInfo,
   findAdminByUsername,
   fetchUsersLikeFirstName,
+  updateProfileInfo
 };

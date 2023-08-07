@@ -9,9 +9,11 @@ const {
   getInfos,
   getProfile,
   searchProfileInfos,
+  updateProfile,
 } = require("../controllers/infoController");
 
 const { verifyUser, verifyAdmin } = require("../middleware/authorization");
+const { updateProfileInfo } = require("../helpers/knexService");
 
 //with middleware for admin
 // router.get("/api/infos", getAll);
@@ -25,5 +27,8 @@ router.get("/api/admin/infos/:search", verifyAdmin, searchProfileInfos);
 router.get("/api/infos/personal", verifyUser, getProfile);
 router.put("/api/infos/personal", verifyUser, updatePersonal);
 router.put("/api/infos/contact", verifyUser, updateContact);
+
+//new
+router.put("/api/infos/profile", updateProfile);
 
 module.exports = router;

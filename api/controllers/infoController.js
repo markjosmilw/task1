@@ -4,6 +4,7 @@ const knex = require("../database/knex");
 const {
   joiPersonalSchema,
   joiContactSchema,
+  joiProfileSchema,
 } = require("../helpers/joiService");
 const {
   fetchUsers,
@@ -12,6 +13,7 @@ const {
   updateContactInfo,
   getPersonalInfoById,
   getContactInfoById,
+  updateProfileInfo,
 } = require("../helpers/knexService");
 
 const getAll = async (ctx) => {
@@ -78,7 +80,7 @@ const getProfile = async (ctx) => {
 const updatePersonal = async (ctx) => {
   //explain
   const { userId, firstName, lastName, age, gender, city } = ctx.request.body;
-  const personal = { userId, firstName, lastName, age, gender, city }
+  const personal = { userId, firstName, lastName, age, gender, city };
   try {
     await joiPersonalSchema(personal);
     await updatePersonalInfo(userId, firstName, lastName, age, gender, city);
@@ -106,6 +108,27 @@ const updateContact = async (ctx) => {
   }
 };
 
+const updateProfile = async (ctx) => {
+  const { userId, firstName, lastName, age, gender, city, email, phone } =
+    ctx.request.body;
+  try {
+    await joiProfileSchema(ctx.request.body);
+    await updateProfileInfo(
+      userId,
+      firstName,
+      lastName,
+      age,
+      gender,
+      city,
+      email,
+      phone
+    );
+    ctx.body = { response: "profile information updated" };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   getAll,
   getInfos,
@@ -113,5 +136,6 @@ module.exports = {
   updatePersonal,
   updateContact,
   getProfileInfos,
-  searchProfileInfos
+  searchProfileInfos,
+  updateProfile,
 };
