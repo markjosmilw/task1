@@ -1,6 +1,6 @@
-const { defineStore } = require("pinia");
+import { defineStore } from "pinia";
 
-export const useAdminStore = defineStore({
+export const useAdminStore = defineStore("admin", {
   state: () => ({
     profileInfos: [],
   }),

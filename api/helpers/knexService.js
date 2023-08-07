@@ -4,8 +4,24 @@ const moment = require("moment");
 
 async function findUserByUsername(username) {
   return await knex("_users")
-    .where({ username: username, deletedAt: null })
+    .where({ username: username, deletedAt: null, isAdmin: 0 })
     .first();
+}
+
+async function fetchUsers() {
+  return await knex("_users")
+    //.where({ isAdmin: 0, deletedAt: null })
+    .leftJoin("_personal", { "_personal.userId": "_users.id" })
+    .leftJoin("_contact", { "_contact.userId": "_users.id" })
+    .where({ "_users.deletedAt": null, "_users.isAdmin": 0 });
+}
+
+async function fetchUsersLikeFirstName(search) {
+  return await knex("_users")
+    .leftJoin("_personal", { "_personal.userId": "_users.id" })
+    .leftJoin("_contact", { "_contact.userId": "_users.id" })
+    .where("_personal.firstName", "like", `%${search}%`)
+    .where({ "_users.deletedAt": null, "_users.isAdmin": 0 });
 }
 
 async function createNewUser(username, password) {
@@ -14,14 +30,13 @@ async function createNewUser(username, password) {
     username: username,
     password: hashedPw,
   });
-
   await knex("_personal").insert({
     userId: uid,
   });
-
   await knex("_contact").insert({
     userId: uid,
   });
+  return;
 }
 
 async function deleteUserById(id) {
@@ -68,13 +83,19 @@ async function updateContactInfo(userId, email, phone) {
   });
 }
 
+async function findAdminByUsername(username) {
+  return await knex("_users").where({ username: username, isAdmin: 1 }).first();
+}
 
 module.exports = {
   findUserByUsername,
+  fetchUsers,
   createNewUser,
   deleteUserById,
   getPersonalInfoById,
   updatePersonalInfo,
   getContactInfoById,
   updateContactInfo,
+  findAdminByUsername,
+  fetchUsersLikeFirstName,
 };

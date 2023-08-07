@@ -10,8 +10,8 @@ const store = useProfileStore();
 watch(route, () => {
   store.fetch();
   var timer = setInterval(function () {
-    const time = store.getTimeRemaining;
     store.fetch();
+    const time = store.getTimeRemaining;
     if (time === 0) {
       clearInterval(timer);
       store.profileInfo = {};

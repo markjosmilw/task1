@@ -1,9 +1,13 @@
+const knex = require("../database/knex");
+
 //helpers
 const {
   joiPersonalSchema,
   joiContactSchema,
 } = require("../helpers/joiService");
 const {
+  fetchUsers,
+  fetchUsersLikeFirstName,
   updatePersonalInfo,
   updateContactInfo,
   getPersonalInfoById,
@@ -39,10 +43,18 @@ const getInfos = async (ctx) => {
 
 const getProfileInfos = async (ctx) => {
   try {
-    const users = await knex("_users")
-      .where({ role: "0" })
-      .leftJoin("_personal", { "_personal.userId": "_users.id" })
-      .leftJoin("_contact", { "_contact.userId": "_users.id" });
+    const users = await fetchUsers();
+    ctx.body = { response: users };
+  } catch (error) {
+    ctx.status = 500;
+    ctx.body = { error: error };
+  }
+};
+
+const searchProfileInfos = async (ctx) => {
+  const search = ctx.request.params.search;
+  try {
+    const users = await fetchUsersLikeFirstName(search);
     ctx.body = { response: users };
   } catch (error) {
     ctx.status = 500;
@@ -66,8 +78,9 @@ const getProfile = async (ctx) => {
 const updatePersonal = async (ctx) => {
   //explain
   const { userId, firstName, lastName, age, gender, city } = ctx.request.body;
+  const personal = { userId, firstName, lastName, age, gender, city }
   try {
-    await joiPersonalSchema(ctx.request.body);
+    await joiPersonalSchema(personal);
     await updatePersonalInfo(userId, firstName, lastName, age, gender, city);
     ctx.body = { response: "personal information updated" };
   } catch (error) {
@@ -99,4 +112,6 @@ module.exports = {
   getProfile,
   updatePersonal,
   updateContact,
+  getProfileInfos,
+  searchProfileInfos
 };
