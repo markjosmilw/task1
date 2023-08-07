@@ -14,11 +14,11 @@ const searchQuery = ref("");
 const itemsPerPage = ref(10); // Number of items to display per page
 const currentPage = ref(1); // Current page
 
-const displayedUsers = computed(() => {
-  const startIndex = (currentPage.value - 1) * itemsPerPage.value;
-  const endIndex = startIndex + itemsPerPage.value;
-  return users.value.slice(startIndex, endIndex);
-});
+// const displayedUsers = computed(() => {
+//   const startIndex = (currentPage.value - 1) * itemsPerPage.value;
+//   const endIndex = startIndex + itemsPerPage.value;
+//   return users.value.slice(startIndex, endIndex);
+// });
 
 const deleteUser = async (userId) => {
   const accessToken = localStorage.getItem("accessToken");
@@ -48,16 +48,18 @@ const deleteUser = async (userId) => {
 };
 
 const fetchInfos = async () => {
+  currentPage.value += 1;
   const accessToken = localStorage.getItem("accessToken");
   if (!accessToken) {
     return;
   }
   try {
     const res = await axios.get(
-      `${import.meta.env.VITE_SERVER}/api/admin/infos`,
+      `${import.meta.env.VITE_SERVER}/api/admin/infos/page/${currentPage.value}`,
       { headers: { Authorization: `Bearer ${accessToken}` } }
     );
-    users.value = res.data.response;
+    users.value = res.data.response
+    console.log(users.value);
   } catch (error) {
     console.log(error);
   }
@@ -104,6 +106,7 @@ fetchInfos();
 </script>
 
 <template>
+  <!-- {{ currentPage }} -->
   <div class="container">
     <div class="landing">
       <div class="tableContainer">
@@ -128,8 +131,8 @@ fetchInfos();
               <th>Phone#</th>
               <th>Actions</th>
             </tr>
-            <tr v-for="(info, index) in displayedUsers" :key="info.userId">
-              <td>{{ (index += currentPage * itemsPerPage - 9) }}</td>
+            <tr v-for="(info, index) in users" :key="info.userId">
+              <td>{{ (index += currentPage * itemsPerPage - 19) }}</td>
               <td>
                 {{
                   `${_.upperFirst(info.firstName)} ${_.upperFirst(
@@ -151,20 +154,19 @@ fetchInfos();
               </td>
             </tr>
           </table>
-          <div v-if="users.length > 0" class="pagination">
-            <button @click="currentPage -= 1" :disabled="currentPage === 1">
+          <div  class="pagination">
+            <button @click="currentPage -= 1">
               Previous
             </button>
             <span
-              >Page {{ currentPage }} of page
+              >Page {{ currentPage-1 }} of
               {{
                 (users.length - (users.length % 10)) / 10 +1
-              }}
+              }} pages
               </span
             >
             <button
-              @click="currentPage += 1"
-              :disabled="currentPage * itemsPerPage >= users.length"
+              @click="fetchInfos"
             >
               Next
             </button>

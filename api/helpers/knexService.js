@@ -9,12 +9,17 @@ async function findUserByUsername(username) {
     .first();
 }
 
-async function fetchUsers() {
+async function fetchUsers(page) {
   return await knex("_users")
-    //.where({ isAdmin: 0, deletedAt: null })
     .leftJoin("_personal", { "_personal.userId": "_users.id" })
     .leftJoin("_contact", { "_contact.userId": "_users.id" })
-    .where({ "_users.deletedAt": null, "_users.isAdmin": 0 });
+    .where({ "_users.deletedAt": null, "_users.isAdmin": 0 })
+    .limit(10)
+    .offset(page == 1 ? 0 : page * 10 - 10);
+}
+
+async function countUsersPage() {
+  return await knex("_users").count().where({ "_users.deletedAt": null, "_users.isAdmin": 0 }).first();
 }
 
 async function fetchUsersLikeFirstName(search) {
@@ -86,6 +91,7 @@ async function updateProfileInfo(
 module.exports = {
   findUserByUsername,
   fetchUsers,
+  countUsersPage,
   createNewUser,
   deleteUserById,
   findAdminByUsername,

@@ -7,12 +7,16 @@ const {
   fetchUsersLikeFirstName,
   updateProfileInfo,
   getProfileInfoByUserId,
+  countUsersPage,
 } = require("../helpers/knexService");
 
 const getProfileInfos = async (ctx) => {
+  const { page } = ctx.request.params;
   try {
-    const users = await fetchUsers();
-    ctx.body = { response: users };
+    const users = await fetchUsers(page);
+    const pages = await countUsersPage();
+    console.log(pages['count(*)']);
+    ctx.body = { response: users, pageCount: 100 }; //calculate the page count here
   } catch (error) {
     ctx.status = 500;
     ctx.body = { error: error };
