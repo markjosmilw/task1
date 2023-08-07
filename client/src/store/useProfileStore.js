@@ -31,9 +31,6 @@ export const useProfileStore = defineStore("profile", {
         localStorage.removeItem("accessToken");
       }
     },
-    async decTime(){
-      console.log(getTimeRemaining);
-    },
     async updateProfile(profileInfo) {
       const { userId, firstName, lastName, age, gender, city, email, phone } =
         profileInfo;

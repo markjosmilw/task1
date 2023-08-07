@@ -16,7 +16,7 @@ watch(route, () => {
       clearInterval(timer);
       store.profileInfo = {};
     }
-  }, 5000);
+  }, 1000);
 });
 </script>
 

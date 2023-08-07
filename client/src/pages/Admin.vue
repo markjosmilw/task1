@@ -151,7 +151,7 @@ fetchInfos();
               </td>
             </tr>
           </table>
-          <div class="pagination">
+          <div v-if="users.length > 0" class="pagination">
             <button @click="currentPage -= 1" :disabled="currentPage === 1">
               Previous
             </button>
