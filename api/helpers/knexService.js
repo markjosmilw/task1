@@ -1,6 +1,7 @@
 const knex = require("../database/knex");
 const bcrypt = require("bcrypt");
 const moment = require("moment");
+const random = require("random-name");
 
 async function findUserByUsername(username) {
   return await knex("_users")
@@ -20,7 +21,7 @@ async function fetchUsersLikeFirstName(search) {
   return await knex("_users")
     .leftJoin("_personal", { "_personal.userId": "_users.id" })
     .leftJoin("_contact", { "_contact.userId": "_users.id" })
-    .where("_personal.firstName", "like", `%${search}%`)
+    .where("_personal.firstName", "like", `${search}%`)
     .where({ "_users.deletedAt": null, "_users.isAdmin": 0 });
 }
 
@@ -45,45 +46,29 @@ async function deleteUserById(id) {
     .update({ deletedAt: moment().format("YYYY[-]MM[-]DD") });
 }
 
-async function getPersonalInfoById(userId) {
+async function findAdminByUsername(username) {
+  return await knex("_users").where({ username: username, isAdmin: 1 }).first();
+}
+
+async function getProfileInfoByUserId(userId) {
   return await knex("_personal")
-    .select("userId", "firstName", "lastName", "age", "gender", "city")
-    .where({ userId: userId })
+    .leftJoin("_contact", {
+      "_contact.userId": "_personal.userId",
+    })
+    .where({ "_personal.userId": userId })
     .first();
 }
 
-async function getContactInfoById(userId) {
-  return await knex("_contact")
-    .select("userId", "email", "phone")
-    .where({ userId: userId })
-    .first();
-}
-
-async function updatePersonalInfo(
+async function updateProfileInfo(
   userId,
   firstName,
   lastName,
   age,
   gender,
-  city
+  city,
+  email,
+  phone
 ) {
-  return await knex("_personal").where({ userId: userId }).update({
-    firstName: firstName,
-    lastName: lastName,
-    age: age,
-    gender: gender,
-    city: city,
-  });
-}
-
-async function updateContactInfo(userId, email, phone) {
-  return await knex("_contact").where({ userId: userId }).update({
-    email: email,
-    phone: phone,
-  });
-}
-
-async function updateProfileInfo(userId, firstName, lastName, age, gender, city, email, phone) {
   await knex("_personal").where({ userId: userId }).update({
     firstName: firstName,
     lastName: lastName,
@@ -98,20 +83,13 @@ async function updateProfileInfo(userId, firstName, lastName, age, gender, city,
   return;
 }
 
-async function findAdminByUsername(username) {
-  return await knex("_users").where({ username: username, isAdmin: 1 }).first();
-}
-
 module.exports = {
   findUserByUsername,
   fetchUsers,
   createNewUser,
   deleteUserById,
-  getPersonalInfoById,
-  updatePersonalInfo,
-  getContactInfoById,
-  updateContactInfo,
   findAdminByUsername,
   fetchUsersLikeFirstName,
-  updateProfileInfo
+  updateProfileInfo,
+  getProfileInfoByUserId,
 };

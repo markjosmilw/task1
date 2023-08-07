@@ -22,6 +22,7 @@ const handleLogin = async () => {
       admin.value
     );
     localStorage.setItem("accessToken", res.data.accessToken);
+    localStorage.setItem("admin", true);
     err.value = "";
     router.push("/admin");
   } catch (error) {

@@ -1,18 +1,15 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import { useSwal } from "../composables/useSwal";
-import { yupPersonalSchema, yupContactSchema } from "../services/useYup";
+import { yupProfileSchema } from "../services/useYup";
 
 export const useProfileStore = defineStore("profile", {
   state: () => ({
-    personalInfo: {},
-    contactInfo: {},
+    profileInfo: {},
     timeRemaining: 0,
   }),
   getters: {
-    getPersonalInfo: (state) => state.personalInfo,
-    getContactInfo: (state) => state.contactInfo,
-    getFirstName: (state) => state.personalInfo.firstName,
+    getProfileInfo: (state) => state.profileInfo,
     getTimeRemaining: (state) => state.timeRemaining,
   },
   actions: {
@@ -24,29 +21,33 @@ export const useProfileStore = defineStore("profile", {
       }
       try {
         const res = await axios.get(
-          `${import.meta.env.VITE_SERVER}/api/infos/personal`,
+          `${import.meta.env.VITE_SERVER}/api/infos/profile`,
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
-        this.personalInfo = res.data.profile;
-        this.contactInfo = res.data.contact;
+        this.profileInfo = res.data.response;
         this.timeRemaining = res.data.timeRemaining;
       } catch (error) {
         useSwal(error.response.data.error, error.response.data.title);
         localStorage.removeItem("accessToken");
       }
     },
-    async updateProfile(personalInfo, contactInfo) {
-      const { userId, firstName, lastName, age, gender, city } = personalInfo;
-      const { email, phone } = contactInfo;
+    async decTime(){
+      console.log(getTimeRemaining);
+    },
+    async updateProfile(profileInfo) {
+      const { userId, firstName, lastName, age, gender, city, email, phone } =
+        profileInfo;
       const accessToken = localStorage.getItem("accessToken");
+      const admin = localStorage.getItem("admin");
       if (!accessToken) {
         return;
       }
       try {
-        await yupPersonalSchema(personalInfo);
-        await yupContactSchema(contactInfo);
+        await yupProfileSchema(profileInfo);
         await axios.put(
-          `${import.meta.env.VITE_SERVER}/api/infos/personal`,
+          admin
+            ? `${import.meta.env.VITE_SERVER}/api/admin/infos/profile`
+            : `${import.meta.env.VITE_SERVER}/api/infos/profile`,
           {
             userId: userId,
             firstName: firstName.toLowerCase(),
@@ -54,15 +55,7 @@ export const useProfileStore = defineStore("profile", {
             age: age,
             gender: gender,
             city: city,
-          },
-          { headers: { Authorization: `Bearer ${accessToken}` } }
-        );
-
-        await axios.put(
-          `${import.meta.env.VITE_SERVER}/api/infos/contact`,
-          {
-            userId: userId,
-            email: email.toLowerCase(),
+            email: email,
             phone: phone,
           },
           { headers: { Authorization: `Bearer ${accessToken}` } }

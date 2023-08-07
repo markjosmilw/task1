@@ -1,20 +1,11 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import { useProfileStore } from "../store/useProfileStore";
 
-const store = useProfileStore();
-
-// onMounted(() => {
-//   const accessToken = localStorage.getItem("accessToken");
-//   if (accessToken) {
-//     router.push("/");
-//     return;
-//   }
-// });
-
 const router = useRouter();
+const store = useProfileStore();
 
 const user = ref({
   username: "",

@@ -1,82 +1,6 @@
 <script setup>
-import { ref, onMounted, watch } from "vue";
-import axios from "axios";
-import _ from "lodash";
-import { useRouter } from "vue-router";
-import { useHandlePersonal, useHandleContact } from "../composables/useForms";
-
 import { useProfileStore } from "../store/useProfileStore";
 const store = useProfileStore();
-//const editState = ref(false);
-// const searchQuery = ref("");
-const userInfo = ref({});
-
-// const infos = ref([]);
-//const info = ref({});
-
-// onMounted(async () => {
-//   user.value = await fetch();
-// });
-
-// async function test() {
-//   const user = await axios.get('')
-
-// watch(editState, () => {
-//   fetchInfos();
-// });
-
-// const deleteUser = async (uid) => {
-//   try {
-//     const e = await swal(`Are you sure you want to delete this user?`, {
-//       buttons: ["no", "yes"],
-//     });
-//     if (e) {
-//       const res = await axios.delete(`${import.meta.env.VITE_SERVER}/api/infos/${uid}`);
-//       fetchInfos();
-//       swal("Deleted!", res.data.response, "success");
-//     }
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-// const editUser = (uid) => {
-//   editState.value = true;
-//   const cont = _.find(infos.value, { userId: uid });
-//   const { password, ...others } = cont;
-//   info.value = others;
-// };
-
-// const handleSearch = () => {
-//   const search = searchQuery.value.toLowerCase();
-//   if (search === "") {
-//     fetchInfos();
-//   } else {
-//     infos.value = infos.value.filter(
-//       (info) =>
-//         info.firstName.toLowerCase().includes(search) ||
-//         info.city.toLowerCase().includes(search) ||
-//         info.email.toLowerCase().includes(search)
-//     );
-//   }
-// };
-// async function fetch() {
-//   const accessToken = localStorage.getItem("accessToken");
-//   if (!accessToken) {
-//     return;
-//   }
-//   try {
-//     const res = await axios.get(
-//       `${import.meta.env.VITE_SERVER}/api/infos/personal`,
-//       { headers: { Authorization: `Bearer ${accessToken}` } }
-//     );
-//     userInfo.value = res.data.response;
-//   } catch (error) {
-//     forceLogout();
-//     console.log(error.response.data.error);
-//   }
-// }
-//fetch();
 </script>
 <template>
   <div class="container">
@@ -85,109 +9,12 @@ const userInfo = ref({});
         Hello,
         {{
           store.getTimeRemaining
-            ? store.getFirstName
-              ? store.getFirstName
+            ? store.getProfileInfo
+              ? store.getProfileInfo.firstName
               : "please update your profile"
             : "visitor"
         }}
       </h1>
-      <!-- <div v-if="user && user.role === 1" class="tableContainer">
-        <div v-if="!editState">
-          <div class="tableHeader">
-            <h1>Data table</h1>
-            <div>
-              <label for="searchInput">&#x1F50E;&#xFE0E;Search:</label>
-              <input type="text" v-model="searchQuery" @input="handleSearch" />
-            </div>
-          </div>
-          <table id="customers">
-            <tr>
-              <th>#</th>
-              <th>Full name</th>
-              <th>Age</th>
-              <th>Gender</th>
-              <th>City</th>
-              <th>Email</th>
-              <th>Phone#</th>
-              <th>Actions</th>
-            </tr>
-            <tr v-for="(info, index) in infos">
-              <td>{{ ++index }}</td>
-              <td>
-                {{
-                  `${_.upperFirst(info.firstName)} ${_.upperFirst(
-                    info.lastName
-                  )}`
-                }}
-              </td>
-              <td>{{ info.age }}</td>
-              <td>{{ info.gender }}</td>
-              <td>{{ _.upperFirst(info.city) }}</td>
-              <td>{{ info.email }}</td>
-              <td>{{ info.phone }}</td>
-              <td>
-                <a style="color: green;" @click="editUser(info.userId)">Edit</a> |
-                <a style="color: red;" @click="deleteUser(info.userId)">Delete</a>
-              </td>
-            </tr>
-          </table>
-        </div>
-        <div class="editForm" v-if="editState">
-          <form class="form">
-            <h1>Personal Information</h1>
-            <div>
-              <label for="firstName">First Name</label>
-              <input type="text" v-model="info.firstName" />
-            </div>
-            <div>
-              <label for="lastName">Last Name</label>
-              <input type="text" v-model="info.lastName" />
-            </div>
-            <div>
-              <label for="age">Age</label>
-              <input type="number" v-model="info.age" />
-            </div>
-            <div>
-              <label for="gender">Gender</label>
-              <input type="text" v-model="info.gender" />
-            </div>
-            <div>
-              <label for="city">City</label>
-              <input type="text" v-model="info.city" />
-            </div>
-            <div>
-              <input
-                type="submit"
-                @click.prevent="useHandlePersonal(info)"
-                class="button"
-                value="save"
-              />
-            </div>
-          </form>
-          <form v-if="editState" class="form">
-            <h1>Contact Information</h1>
-            <div>
-              <label for="firstName">Email</label>
-              <input type="text" v-model="info.email" />
-            </div>
-            <div>
-              <label for="lastName">Phone</label>
-              <input type="text" v-model="info.phone" />
-            </div>
-            <div>
-              <input
-                type="submit"
-                @click.prevent="useHandleContact(info)"
-                class="button"
-                value="save"
-              />
-            </div>
-            <button @click.prevent="editState = !editState" class="return">
-              return
-            </button>
-          </form>
-        </div>
-      </div> -->
     </div>
   </div>
 </template>

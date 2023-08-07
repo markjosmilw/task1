@@ -1,35 +1,23 @@
 <script setup>
-import { ref, onMounted } from "vue";
-import axios from "axios";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { object, string } from "yup";
+import axios from "axios";
 import { useSwal } from "../composables/useSwal";
-
-onMounted(() => {
-  const accessToken = localStorage.getItem("accessToken");
-  if (accessToken) {
-    router.push("/");
-    return;
-  }
-});
+import { yupUserSchema } from "../services/useYup";
+import { useProfileStore } from "../store/useProfileStore";
 
 const router = useRouter();
+const store = useProfileStore();
 
+const err = ref("");
 const user = ref({
   username: "",
   password: "",
 });
 
-const err = ref("");
-
-const userSchema = object({
-  username: string().min(5).required(),
-  password: string().min(5).required(),
-});
-
 const handleReg = async () => {
   try {
-    await userSchema.validate(user.value);
+    await yupUserSchema(user.value);
     const res = await axios.post(
       `${import.meta.env.VITE_SERVER}/api/users/register`,
       user.value

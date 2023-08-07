@@ -1,6 +1,6 @@
 <script setup>
 import { watch } from "vue";
-import Navbar from "./components/Navbar.vue";
+import Navbar from "./components/navbar.vue";
 import { RouterView, useRoute } from "vue-router";
 import { useProfileStore } from "./store/useProfileStore";
 
@@ -16,11 +16,11 @@ watch(route, () => {
       clearInterval(timer);
       store.profileInfo = {};
     }
-  }, 1000);
+  }, 5000);
 });
 </script>
 
-<template>
+<template>{{  }}
   <div class="wrapper">
     <Navbar />
     <RouterView class="container" />

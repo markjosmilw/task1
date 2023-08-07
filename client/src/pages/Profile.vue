@@ -3,14 +3,13 @@ import { ref, watch } from "vue";
 import { useProfileStore } from "../store/useProfileStore";
 
 const store = useProfileStore();
-const personalInfo = ref({});
-const contactInfo = ref({});
+const profileInfo = ref({});
 const editProfile = ref(false);
 
 watch(editProfile, () => {
-  personalInfo.value = store.getPersonalInfo;
-  contactInfo.value = store.getContactInfo;
+  profileInfo.value = store.getProfileInfo;
 });
+
 </script>
 <template>
   <div class="container">
@@ -18,39 +17,39 @@ watch(editProfile, () => {
       <h1>Profile Information</h1>
       <div>
         <label for="firstName">First Name</label>
-        <input type="text" v-model="personalInfo.firstName" />
+        <input type="text" v-model="profileInfo.firstName" />
       </div>
       <div>
         <label for="lastName">Last Name</label>
-        <input type="text" v-model="personalInfo.lastName" />
+        <input type="text" v-model="profileInfo.lastName" />
       </div>
       <div>
         <label for="age">Age</label>
-        <input type="number" v-model="personalInfo.age" />
+        <input type="number" v-model="profileInfo.age" />
       </div>
       <div>
         <label for="gender">Gender</label>
-        <select v-model="personalInfo.gender">
+        <select v-model="profileInfo.gender">
           <option value="male">male</option>
           <option value="female">female</option>
         </select>
       </div>
       <div>
         <label for="city">City</label>
-        <input type="text" v-model="personalInfo.city" />
+        <input type="text" v-model="profileInfo.city" />
       </div>
       <div>
         <label for="firstName">Email</label>
-        <input type="text" v-model="contactInfo.email" />
+        <input type="text" v-model="profileInfo.email" />
       </div>
       <div>
         <label for="lastName">Phone</label>
-        <input type="text" v-model="contactInfo.phone" />
+        <input type="text" v-model="profileInfo.phone" />
       </div>
       <div>
         <input
           type="submit"
-          @click.prevent="store.updateProfile(personalInfo, contactInfo)"
+          @click.prevent="store.updateProfile(profileInfo)"
           class="button"
           value="update"
         />
@@ -61,16 +60,16 @@ watch(editProfile, () => {
     </form>
     <div v-else class="card">
       <img src="../assets/profile.jpg" style="width: 100%" />
-      <p><span>User ID:</span> {{ store.getPersonalInfo.userId }}</p>
+      <p><span>User ID:</span> {{ store.getProfileInfo.userId }}</p>
       <h2>Personal Information</h2>
-      <p><span>First name:</span> {{ store.getPersonalInfo.firstName }}</p>
-      <p><span>Last name:</span> {{ store.getPersonalInfo.lastName }}</p>
-      <p><span>Age:</span> {{ store.getPersonalInfo.age }}</p>
-      <p><span>Gender:</span> {{ store.getPersonalInfo.gender }}</p>
-      <p><span>City:</span> {{ store.getPersonalInfo.city }}</p>
+      <p><span>First name:</span> {{ store.getProfileInfo.firstName }}</p>
+      <p><span>Last name:</span> {{ store.getProfileInfo.lastName }}</p>
+      <p><span>Age:</span> {{ store.getProfileInfo.age }}</p>
+      <p><span>Gender:</span> {{ store.getProfileInfo.gender }}</p>
+      <p><span>City:</span> {{ store.getProfileInfo.city }}</p>
       <h2>Contact Information</h2>
-      <p><span>Email:</span> {{ store.getContactInfo.email }}</p>
-      <p><span>Phone #:</span> {{ store.getContactInfo.phone }}</p>
+      <p><span>Email:</span> {{ store.getProfileInfo.email }}</p>
+      <p><span>Phone #:</span> {{ store.getProfileInfo.phone }}</p>
       <p>
         <button @click="editProfile = !editProfile">Edit your profile</button>
       </p>

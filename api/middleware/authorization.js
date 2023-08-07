@@ -19,14 +19,13 @@ const verifyUser = (ctx, next) => {
     const setExpired = decoded.exp;
     const now = Math.floor(Date.now() / 1000) + 60 * 60;
     const timeRemaining = 60 - (now - setExpired);
-    // if (timeRemaining < 0) {
-    //   ctx.status = 401;
-    //   ctx.body = { error: "token has expired", title: "Session timeout" };
-    //   return;
-    // }
+    if (timeRemaining < 0) {
+      ctx.status = 401;
+      ctx.body = { error: "token has expired", title: "Session timeout" };
+      return;
+    }
     ctx.request.userId = decoded.data;
     ctx.request.timeRemaining = timeRemaining;
-    //ctx.request.timeRemaining = decoded.data;
   } catch (error) {
     ctx.status = 401;
     ctx.body = { error: "token invalid" };
@@ -64,11 +63,11 @@ const verifyAdmin = (ctx, next) => {
     const setExpired = decoded.exp;
     const now = Math.floor(Date.now() / 1000) + 60 * 60;
     const timeRemaining = 60 - (now - setExpired);
-    // if (timeRemaining < 0) {
-    //   ctx.status = 401;
-    //   ctx.body = { error: "token has expired", title: "Session timeout" };
-    //   return;
-    // }
+    if (timeRemaining < 0) {
+      ctx.status = 401;
+      ctx.body = { error: "token has expired", title: "Session timeout" };
+      return;
+    }
   } catch (error) {
     ctx.status = 401;
     ctx.body = { error: "token invalid" };
