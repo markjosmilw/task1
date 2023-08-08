@@ -14,6 +14,7 @@ const profileInfo = ref({});
 const searchQuery = ref("");
 const itemsPerPage = ref(10); // Number of items to display per page
 const currentPage = ref(0); // Current page
+const firstSearch = ref(false);
 
 // const displayedUsers = computed(() => {
 //   const startIndex = (currentPage.value - 1) * itemsPerPage.value;
@@ -71,6 +72,7 @@ const fetchInfos = async () => {
 };
 
 const handleSearch = async () => {
+  
   const accessToken = localStorage.getItem("accessToken");
   if (!accessToken) {
     return;
@@ -79,6 +81,7 @@ const handleSearch = async () => {
     if (!searchQuery.value) {
       return;
     }
+
     const res = await axios.get(
       `${import.meta.env.VITE_SERVER}/api/admin/infos/${searchQuery.value}=${
         currentPage.value
