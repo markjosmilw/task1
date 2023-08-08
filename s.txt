@@ -1,62 +1,8 @@
-yes i want the /example is accessible if my port is 5174
-ChatGPT
-To allow access to the /example route only when the server is running on port 5174, you can modify the navigation guard to perform the check. Since the server's port is not directly accessible from the client-side JavaScript, you need to pass this information to the client in some way. One approach is to define a global variable in your HTML file that holds the server port, and then use this variable in your Vue Router configuration.
-
-Assuming you have a global variable named SERVER_PORT defined in your HTML file, you can do the following:
-
-In your HTML file, set the SERVER_PORT global variable before loading your main JavaScript file (e.g., app.js):
-html
-Copy code
-<!DOCTYPE html>
-<html>
-<head>
-  <!-- Your other head elements... -->
-  <script>
-    window.SERVER_PORT = 5174;
-  </script>
-</head>
-<body>
-  <div id="app"></div>
-  <script src="/path/to/app.js"></script>
-</body>
-</html>
-In your Vue Router configuration:
-javascript
-Copy code
-import { createRouter, createWebHistory } from 'vue-router';
-
-const routes = [
-  {
-    path: '/example',
-    name: 'ExampleRoute',
-    component: () => import('@/views/ExampleView.vue'),
-    meta: {
-      requiresSpecificPort: true,
-    },
-  },
-  // other routes...
-];
-
-const router = createRouter({
-  history: createWebHistory(),
-  routes,
-});
-
-router.beforeEach((to, from, next) => {
-  if (to.meta.requiresSpecificPort) {
-    // Check if the current port matches the required port
-    if (window.SERVER_PORT === 5174) {
-      next();
-    } else {
-      // Redirect to a different route or show an error page
-      next('/port-mismatch');
-    }
-  } else {
-    next();
-  }
-});
-
-export default router;
-In this setup, when the client accesses the /example route, the navigation guard checks if the requiresSpecificPort meta field is set to true (meaning the route requires a specific port). If it does, the guard compares the window.SERVER_PORT variable with the required port (in this case, 5174). If they match, access to the /example route is granted. Otherwise, the user is redirected to a different route (e.g., '/port-mismatch').
-
-Remember to replace '@/views/ExampleView.vue' with the actual path to your component, and adjust the global variable SERVER_PORT and the required port (in this case, 5174) to your desired port number.
+separation of service files
+improved queries
+creation of new users reserves row for other tables
+routes are protected by middlewares
+jwt tokens are stored in headers
+session time for users/admin
+fetch users info by part
+fetch searched users info by part

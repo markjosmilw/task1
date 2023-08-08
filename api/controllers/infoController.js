@@ -39,7 +39,6 @@ const searchProfileInfos = async (ctx) => {
 };
 
 const getProfile = async (ctx) => {
-  //explain
   const timeRemaining = ctx.request.timeRemaining;
   const userId = ctx.request.userId;
   try {
