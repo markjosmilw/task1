@@ -15,9 +15,11 @@ const getProfileInfos = async (ctx) => {
   try {
     const users = await fetchUsers(page);
     const pages = await countUsersPage();
-    console.log(pages['count(*)']);
-    ctx.body = { response: users, pageCount: 100 }; //calculate the page count here
+    const p = pages["count(*)"];
+    const pageCount = (p - (p % 10)) / 10; //pages["count(*)"] - (pages["count(*)"] % 10)
+    ctx.body = { response: users, pageCount: pageCount }; //calculate the page count here
   } catch (error) {
+    console.log(object);
     ctx.status = 500;
     ctx.body = { error: error };
   }
@@ -33,6 +35,17 @@ const searchProfileInfos = async (ctx) => {
     ctx.body = { error: error };
   }
 };
+
+// const searchProfileInfos = async (ctx) => {
+//   const search = ctx.request.params.search;
+//   try {
+//     const users = await fetchUsersLikeFirstName(search);
+//     ctx.body = { response: users };
+//   } catch (error) {
+//     ctx.status = 500;
+//     ctx.body = { error: error };
+//   }
+// };
 
 const getProfile = async (ctx) => {
   //explain

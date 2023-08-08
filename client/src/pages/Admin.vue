@@ -9,10 +9,11 @@ import { useProfileStore } from "../store/useProfileStore";
 const store = useProfileStore();
 const editState = ref(false);
 const users = ref([]);
+const pageCount = ref(0);
 const profileInfo = ref({});
 const searchQuery = ref("");
 const itemsPerPage = ref(10); // Number of items to display per page
-const currentPage = ref(1); // Current page
+const currentPage = ref(0); // Current page
 
 // const displayedUsers = computed(() => {
 //   const startIndex = (currentPage.value - 1) * itemsPerPage.value;
@@ -48,18 +49,22 @@ const deleteUser = async (userId) => {
 };
 
 const fetchInfos = async () => {
-  currentPage.value += 1;
   const accessToken = localStorage.getItem("accessToken");
   if (!accessToken) {
     return;
   }
   try {
+    currentPage.value += 1;
     const res = await axios.get(
-      `${import.meta.env.VITE_SERVER}/api/admin/infos/page/${currentPage.value}`,
+      `${import.meta.env.VITE_SERVER}/api/admin/infos/page/${
+        currentPage.value
+      }`,
       { headers: { Authorization: `Bearer ${accessToken}` } }
     );
-    users.value = res.data.response
-    console.log(users.value);
+    users.value = res.data.response;
+    pageCount.value = res.data.pageCount;
+
+    console.log(res.data);
   } catch (error) {
     console.log(error);
   }
@@ -71,12 +76,18 @@ const handleSearch = async () => {
     return;
   }
   try {
+    if (!searchQuery.value) {
+      return;
+    }
     const res = await axios.get(
-      `${import.meta.env.VITE_SERVER}/api/admin/infos/${searchQuery.value}`,
+      `${import.meta.env.VITE_SERVER}/api/admin/infos/${searchQuery.value}=${
+        currentPage.value
+      }`,
       { headers: { Authorization: `Bearer ${accessToken}` } }
     );
+    currentPage.value++;
     users.value = res.data.response;
-    currentPage.value = 1;
+    console.log(res.data);
   } catch (error) {
     console.log(error);
   }
@@ -106,7 +117,6 @@ fetchInfos();
 </script>
 
 <template>
-  <!-- {{ currentPage }} -->
   <div class="container">
     <div class="landing">
       <div class="tableContainer">
@@ -132,7 +142,13 @@ fetchInfos();
               <th>Actions</th>
             </tr>
             <tr v-for="(info, index) in users" :key="info.userId">
-              <td>{{ (index += currentPage * itemsPerPage - 19) }}</td>
+              <td>
+                {{
+                  currentPage === 1
+                    ? ++index
+                    : ++index + itemsPerPage * currentPage
+                }}
+              </td>
               <td>
                 {{
                   `${_.upperFirst(info.firstName)} ${_.upperFirst(
@@ -154,20 +170,10 @@ fetchInfos();
               </td>
             </tr>
           </table>
-          <div  class="pagination">
-            <button @click="currentPage -= 1">
-              Previous
-            </button>
-            <span
-              >Page {{ currentPage-1 }} of
-              {{
-                (users.length - (users.length % 10)) / 10 +1
-              }} pages
-              </span
-            >
-            <button
-              @click="fetchInfos"
-            >
+          <div class="pagination">
+            <button @click="currentPage -= 1">Previous</button>
+            <span>Page {{ currentPage }} of {{ pageCount }} pages </span>
+            <button @click="!searchQuery ? fetchInfos() : handleSearch()">
               Next
             </button>
           </div>
@@ -214,10 +220,7 @@ fetchInfos();
                 value="update"
               />
             </div>
-            <button
-              @click.prevent="editState = !editState && fetchInfos()"
-              class="return"
-            >
+            <button @click.prevent="editState = !editState" class="return">
               return
             </button>
           </form>

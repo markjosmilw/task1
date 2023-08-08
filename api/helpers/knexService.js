@@ -1,7 +1,6 @@
 const knex = require("../database/knex");
 const bcrypt = require("bcrypt");
 const moment = require("moment");
-const random = require("random-name");
 
 async function findUserByUsername(username) {
   return await knex("_users")
@@ -19,16 +18,32 @@ async function fetchUsers(page) {
 }
 
 async function countUsersPage() {
-  return await knex("_users").count().where({ "_users.deletedAt": null, "_users.isAdmin": 0 }).first();
+  return await knex("_users")
+    .count()
+    .where({ "_users.deletedAt": null, "_users.isAdmin": 0 })
+    .first();
 }
 
 async function fetchUsersLikeFirstName(search) {
+  const searchInput = search.split('=')[0]
+  const searchPage = parseInt(search.split('=')[1])
+  console.log(searchPage);
   return await knex("_users")
     .leftJoin("_personal", { "_personal.userId": "_users.id" })
     .leftJoin("_contact", { "_contact.userId": "_users.id" })
-    .where("_personal.firstName", "like", `${search}%`)
-    .where({ "_users.deletedAt": null, "_users.isAdmin": 0 });
+    .where("_personal.firstName", "like", `${searchInput}%`)
+    .where({ "_users.deletedAt": null, "_users.isAdmin": 0 })
+    .limit(10)
+    .offset(searchPage == 1 ? 0 : searchPage * 10 - 10);
 }
+
+// async function fetchUsersLikeFirstName(search, page) {
+//   return await knex("_users")
+//     .leftJoin("_personal", { "_personal.userId": "_users.id" })
+//     .leftJoin("_contact", { "_contact.userId": "_users.id" })
+//     .where("_personal.firstName", "like", `${search}%`)
+//     .where({ "_users.deletedAt": null, "_users.isAdmin": 0 });
+// }
 
 async function createNewUser(username, password) {
   const hashedPw = await bcrypt.hash(password, 10);
