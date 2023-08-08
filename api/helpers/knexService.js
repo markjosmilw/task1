@@ -38,17 +38,15 @@ async function countUsersPage(searchInput) {
     .first();
 }
 
-async function fetchUsersLikeFirstName(search) {
-  const searchInput = search.split("=")[0];
-  const searchPage = parseInt(search.split("=")[1]);
-  console.log(searchPage);
+async function fetchUsersLikeFirstName(searchInput, pageNum) {
+
   return await knex("_users")
     .leftJoin("_personal", { "_personal.userId": "_users.id" })
     .leftJoin("_contact", { "_contact.userId": "_users.id" })
     .where("_personal.firstName", "like", `${searchInput}%`)
     .where({ "_users.deletedAt": null, "_users.isAdmin": 0 })
     .limit(10)
-    .offset(searchPage == 1 ? 0 : searchPage * 10 - 10);
+    .offset(pageNum == 1 ? 0 : pageNum * 10 - 10);
 }
 
 // async function fetchUsersLikeFirstName(search, page) {
