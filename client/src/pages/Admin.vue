@@ -173,9 +173,13 @@ fetchInfos();
             </tr>
           </table>
           <div class="pagination">
-            <button @click="currentPage -= 1">Previous</button>
+            <button @click="currentPage -= 1" :disabled="currentPage === 1">
+              Previous
+            </button>
             <span>Page {{ currentPage }} of {{ pageCount + 1 }} pages </span>
-            <button @click="currentPage++">Next</button>
+            <button @click="currentPage++" :disabled="currentPage === pageCount+1">
+              Next
+            </button>
           </div>
         </div>
         <div class="editForm" v-if="editState">

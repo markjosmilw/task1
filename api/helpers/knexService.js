@@ -17,13 +17,6 @@ async function fetchUsers(page) {
     .offset(page == 1 ? 0 : page * 10 - 10);
 }
 
-// async function countUsersPage() {
-//   return await knex("_users")
-//     .count()
-//     .where({ "_users.deletedAt": null, "_users.isAdmin": 0 })
-//     .first();
-// }
-
 async function countUsersPage(searchInput) {
   if (searchInput)
     return await knex("_users")
@@ -39,7 +32,6 @@ async function countUsersPage(searchInput) {
 }
 
 async function fetchUsersLikeFirstName(searchInput, pageNum) {
-
   return await knex("_users")
     .leftJoin("_personal", { "_personal.userId": "_users.id" })
     .leftJoin("_contact", { "_contact.userId": "_users.id" })
@@ -48,14 +40,6 @@ async function fetchUsersLikeFirstName(searchInput, pageNum) {
     .limit(10)
     .offset(pageNum == 1 ? 0 : pageNum * 10 - 10);
 }
-
-// async function fetchUsersLikeFirstName(search, page) {
-//   return await knex("_users")
-//     .leftJoin("_personal", { "_personal.userId": "_users.id" })
-//     .leftJoin("_contact", { "_contact.userId": "_users.id" })
-//     .where("_personal.firstName", "like", `${search}%`)
-//     .where({ "_users.deletedAt": null, "_users.isAdmin": 0 });
-// }
 
 async function createNewUser(username, password) {
   const hashedPw = await bcrypt.hash(password, 10);
