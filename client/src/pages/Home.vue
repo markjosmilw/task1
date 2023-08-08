@@ -9,10 +9,10 @@ const store = useProfileStore();
         Hello,
         {{
           store.getTimeRemaining
-            ? store.getProfileInfo
-              ? store.getProfileInfo.firstName
-              : "please update your profile"
-            : "visitor"
+            ? store.getProfileInfo.firstName
+              ? store.getProfileInfo.firstName+'!'
+              : "please update your profile."
+            : "visitor!"
         }}
       </h1>
     </div>

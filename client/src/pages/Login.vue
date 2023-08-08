@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
-import { useRouter } from "vue-router";
+import { useRouter, RouterLink } from "vue-router";
 import { useProfileStore } from "../store/useProfileStore";
 
 const router = useRouter();
@@ -52,6 +52,8 @@ const handleLogin = async () => {
           value="sign in"
         />
       </div>
+      <p class="message">got no account? <span><RouterLink to="/register">Sign up</RouterLink></span> here!</p>
+      <p class="message">sign in as <span><RouterLink to="/adminlogin">admin</RouterLink></span> here!</p>
     </form>
   </div>
 </template>

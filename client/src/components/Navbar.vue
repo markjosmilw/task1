@@ -10,7 +10,7 @@ const router = useRouter();
 const route = useRoute();
 
 watch(route, () => {
-  isAdmin.value = localStorage.getItem('admin')
+  isAdmin.value = localStorage.getItem("admin");
 });
 
 const handleLogout = async () => {
@@ -22,21 +22,41 @@ const handleLogout = async () => {
 </script>
 <template>
   <div class="header">
-    <RouterLink :to="isAdmin ? '/admin' : '/'">Home</RouterLink>
+    <RouterLink
+      :class="route.path === '/' ? 'active' : ''"
+      :to="isAdmin ? '/admin' : '/'"
+      >///</RouterLink
+    >
     <div class="nav">
-      <RouterLink to="/about">About us</RouterLink>
-      <RouterLink to="/contact">Contact us</RouterLink>
-      <RouterLink v-if="!store.getTimeRemaining" to="/register"
-        >Register</RouterLink
+      <RouterLink
+        :class="route.path === '/' ? 'active' : ''"
+        :to="isAdmin ? '/admin' : '/'"
+        >Home</RouterLink
       >
-      <RouterLink v-if="!store.getTimeRemaining" to="/login">Login</RouterLink>
-      <RouterLink v-if="store.getTimeRemaining && !isAdmin" to="/profile"
+      <RouterLink :class="route.path === '/about' ? 'active' : ''" to="/about"
+        >About us</RouterLink
+      >
+      <RouterLink
+        :class="route.path === '/contact' ? 'active' : ''"
+        to="/contact"
+        >Contact us</RouterLink
+      >
+      <RouterLink
+        :class="route.path === '/profile' ? 'active' : ''"
+        v-if="store.getTimeRemaining && !isAdmin"
+        to="/profile"
         >Profile</RouterLink
       >
-      <RouterLink v-if="store.getTimeRemaining" @click="handleLogout" to="/"
-        >Logout {{ store.getTimeRemaining }}</RouterLink
-      >
     </div>
+    <RouterLink v-if="store.getTimeRemaining" @click="handleLogout" to="/"
+      >Logout {{ store.getTimeRemaining }}</RouterLink
+    >
+    <RouterLink
+      :class="route.path === '/login' ? 'active' : ''"
+      v-if="!store.getTimeRemaining"
+      to="/login"
+      >Login</RouterLink
+    >
   </div>
 </template>
 <style scoped lang="scss">

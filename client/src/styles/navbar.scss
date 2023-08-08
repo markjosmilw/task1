@@ -1,19 +1,18 @@
 .header {
+  .active {
+    color: #fff;
+  }
   a {
-    text-decoration: none;
-    color: black;
     display: inline-block;
     padding: 5px 10px;
     font-size: 24px;
     cursor: pointer;
     text-align: center;
     text-decoration: none;
-    color: #fff;
-    background-color: #2e5e4e;
-    border: none;
-    border-radius: 15px;
+    color: #bbbaba;
+
     &:hover {
-      opacity: 0.8;
+      color: #fff;
     }
   }
   font-size: 30px;

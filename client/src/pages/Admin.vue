@@ -177,7 +177,10 @@ fetchInfos();
               Previous
             </button>
             <span>Page {{ currentPage }} of {{ pageCount + 1 }} pages </span>
-            <button @click="currentPage++" :disabled="currentPage === pageCount+1">
+            <button
+              @click="currentPage++"
+              :disabled="currentPage === pageCount + 1"
+            >
               Next
             </button>
           </div>

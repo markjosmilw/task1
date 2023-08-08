@@ -9,7 +9,6 @@ const editProfile = ref(false);
 watch(editProfile, () => {
   profileInfo.value = store.getProfileInfo;
 });
-
 </script>
 <template>
   <div class="container">
@@ -59,20 +58,26 @@ watch(editProfile, () => {
       </button>
     </form>
     <div v-else class="card">
-      <img src="../assets/profile.jpg" style="width: 100%" />
-      <p><span>User ID:</span> {{ store.getProfileInfo.userId }}</p>
-      <h2>Personal Information</h2>
-      <p><span>First name:</span> {{ store.getProfileInfo.firstName }}</p>
-      <p><span>Last name:</span> {{ store.getProfileInfo.lastName }}</p>
-      <p><span>Age:</span> {{ store.getProfileInfo.age }}</p>
-      <p><span>Gender:</span> {{ store.getProfileInfo.gender }}</p>
-      <p><span>City:</span> {{ store.getProfileInfo.city }}</p>
-      <h2>Contact Information</h2>
-      <p><span>Email:</span> {{ store.getProfileInfo.email }}</p>
-      <p><span>Phone #:</span> {{ store.getProfileInfo.phone }}</p>
-      <p>
-        <button @click="editProfile = !editProfile">Edit your profile</button>
-      </p>
+      <div>
+        <img src="../assets/profile.jpg" style="width: 100%" />
+      </div>
+      <div class="profileCard">
+        <div>
+          <p><span>User ID:</span> {{ store.getProfileInfo.userId }}</p>
+          <h2>Personal Information</h2>
+          <p><span>First name:</span> {{ store.getProfileInfo.firstName }}</p>
+          <p><span>Last name:</span> {{ store.getProfileInfo.lastName }}</p>
+          <p><span>Age:</span> {{ store.getProfileInfo.age }}</p>
+          <p><span>Gender:</span> {{ store.getProfileInfo.gender }}</p>
+          <p><span>City:</span> {{ store.getProfileInfo.city }}</p>
+        </div>
+        <div>
+          <h2>Contact Information</h2>
+          <p><span>Email:</span> {{ store.getProfileInfo.email }}</p>
+          <p><span>Phone #:</span> {{ store.getProfileInfo.phone }}</p>
+        </div>
+        <button class="button" @click="editProfile = !editProfile">Edit your profile</button>
+      </div>
     </div>
   </div>
 </template>

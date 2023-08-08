@@ -11,23 +11,6 @@ export async function fetch() {
   }
   return;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //not using yet
 export function useValidate() {
   const user = ref({});

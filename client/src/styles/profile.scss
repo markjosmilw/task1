@@ -4,15 +4,14 @@
   flex-direction: row;
   gap: 50px;
   .return {
+    display: inline-block;
     padding: 5px 10px;
-    font-size: 24px;
+    font-size: 20px;
     cursor: pointer;
     text-align: center;
     text-decoration: none;
-    color: #fff;
-    background-color: #2e5e4e;
-    border: none;
-    border-radius: 15px;
+    color: 2A2F33;
+    background-color: #fff;
   }
   .form {
     width: 30%;
@@ -23,10 +22,9 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
-    
-    
 
-    input, select {
+    input,
+    select {
       width: 100%;
       border: none;
       padding: 10px;
@@ -34,14 +32,13 @@
     .button {
       display: inline-block;
       padding: 5px 10px;
-      font-size: 24px;
+
       cursor: pointer;
       text-align: center;
       text-decoration: none;
-      color: #fff;
-      background-color: #2e5e4e;
-      border: none;
-      border-radius: 15px;
+      color: 2A2F33;
+      background-color: #fff;
+      font-size: 20px;
     }
   }
   .card {
@@ -50,22 +47,23 @@
     margin: auto;
     text-align: center;
     font-family: arial;
-    span{
-      font-weight: bold;
-    }
-    button {
-      border: none;
-      outline: 0;
-      display: inline-block;
-      padding: 8px;
-      color: white;
-      background-color: #2e5e4e;
-      text-align: center;
-      cursor: pointer;
-      width: 100%;
-      font-size: 18px;
-      &:hover {
-        opacity: 0.8;
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .profileCard {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      button {
+        cursor: pointer;
+        color: #2a2f33;
+        padding: 20px;
+        font-size: 20px;
+        &:hover {
+          background-color: white;
+        }
       }
     }
   }
