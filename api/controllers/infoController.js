@@ -27,9 +27,14 @@ const getProfileInfos = async (ctx) => {
 
 const searchProfileInfos = async (ctx) => {
   const search = ctx.request.params.search;
+  const searchInput = search.split("=")[0];
+  const searchPage = parseInt(search.split("=")[1]);
   try {
     const users = await fetchUsersLikeFirstName(search);
-    ctx.body = { response: users };
+    const pages = await countUsersPage(searchInput);
+    const p = pages["count(*)"];
+    const pageCount = (p - (p % 10)) / 10; //pages["count(*)"] - (pages["count(*)"] % 10)
+    ctx.body = { response: users, pageCount: pageCount }; //calculate the page count here
   } catch (error) {
     ctx.status = 500;
     ctx.body = { error: error };

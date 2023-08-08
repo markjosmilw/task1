@@ -97,6 +97,7 @@ const fetchInfosBySearch = async () => {
     );
     isSearching.value = true;
     users.value = res.data.response;
+    pageCount.value = res.data.pageCount;
   } catch (error) {
     console.log(error);
   }

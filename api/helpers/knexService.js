@@ -17,7 +17,21 @@ async function fetchUsers(page) {
     .offset(page == 1 ? 0 : page * 10 - 10);
 }
 
-async function countUsersPage() {
+// async function countUsersPage() {
+//   return await knex("_users")
+//     .count()
+//     .where({ "_users.deletedAt": null, "_users.isAdmin": 0 })
+//     .first();
+// }
+
+async function countUsersPage(searchInput) {
+  if (searchInput)
+    return await knex("_users")
+      .count()
+      .leftJoin("_personal", { "_personal.userId": "_users.id" })
+      .where({ "_users.deletedAt": null, "_users.isAdmin": 0 })
+      .where("_personal.firstName", "like", `${searchInput}%`)
+      .first();
   return await knex("_users")
     .count()
     .where({ "_users.deletedAt": null, "_users.isAdmin": 0 })
@@ -25,8 +39,8 @@ async function countUsersPage() {
 }
 
 async function fetchUsersLikeFirstName(search) {
-  const searchInput = search.split('=')[0]
-  const searchPage = parseInt(search.split('=')[1])
+  const searchInput = search.split("=")[0];
+  const searchPage = parseInt(search.split("=")[1]);
   console.log(searchPage);
   return await knex("_users")
     .leftJoin("_personal", { "_personal.userId": "_users.id" })
