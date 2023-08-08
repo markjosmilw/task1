@@ -29,6 +29,7 @@ export const useProfileStore = defineStore("profile", {
       } catch (error) {
         useSwal(error.response.data.error, error.response.data.title);
         localStorage.removeItem("accessToken");
+        localStorage.removeItem("admin");
       }
     },
     async updateProfile(profileInfo) {

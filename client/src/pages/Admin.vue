@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed } from "vue";
+import { ref, watch } from "vue";
 import axios from "axios";
 import _ from "lodash";
 import swal from "sweetalert";
@@ -14,9 +14,23 @@ const profileInfo = ref({});
 const searchQuery = ref("");
 const itemsPerPage = ref(10);
 const currentPage = ref(1);
-const currentSearchPage = ref(1);
 const isSearching = ref(false);
 
+watch(editState, async () => {
+  fetchInfos();
+});
+
+watch(searchQuery, async () => {
+  if (!searchQuery.value && isSearching.value) {
+    currentPage.value = 1;
+    fetchInfos();
+  }
+});
+
+watch(currentPage, async () => {
+  if (!isSearching.value) return fetchInfos();
+  fetchInfosBySearch();
+});
 
 const deleteUser = async (userId) => {
   const accessToken = localStorage.getItem("accessToken");
@@ -59,14 +73,13 @@ const fetchInfos = async () => {
     );
     users.value = res.data.response;
     pageCount.value = res.data.pageCount;
-
-    console.log(res.data);
   } catch (error) {
     console.log(error);
   }
 };
 
 const fetchInfosBySearch = async () => {
+  if (!isSearching.value) currentPage.value = 1;
   const accessToken = localStorage.getItem("accessToken");
   if (!accessToken) {
     return;
@@ -78,33 +91,16 @@ const fetchInfosBySearch = async () => {
 
     const res = await axios.get(
       `${import.meta.env.VITE_SERVER}/api/admin/infos/${searchQuery.value}=${
-        currentSearchPage.value
+        currentPage.value
       }`,
       { headers: { Authorization: `Bearer ${accessToken}` } }
     );
     isSearching.value = true;
     users.value = res.data.response;
-    console.log(res.data);
   } catch (error) {
     console.log(error);
   }
 };
-
-watch(searchQuery, async (search) => {
-  if (!search) await fetchInfos();
-});
-
-watch(editState, async () => {
-  fetchInfos();
-});
-
-watch(currentPage, async () => {
-  fetchInfos();
-});
-
-watch(currentSearchPage, async () => {
-  fetchInfosBySearch();
-});
 
 function editUser(info) {
   editState.value = !editState.value;
@@ -123,7 +119,6 @@ fetchInfos();
 
 <template>
   <div class="container">
-    {{ isSearching }}
     <div class="landing">
       <div class="tableContainer">
         <div></div>
@@ -150,11 +145,7 @@ fetchInfos();
             <tr v-for="(info, index) in users" :key="info.userId">
               <td>
                 {{
-                  isSearching
-                    ? currentSearchPage === 1
-                      ? ++index
-                      : ++index + itemsPerPage * currentSearchPage
-                    : currentPage === 1
+                  currentPage === 1
                     ? ++index
                     : ++index + itemsPerPage * currentPage
                 }}
@@ -180,17 +171,10 @@ fetchInfos();
               </td>
             </tr>
           </table>
-          <div v-if="!isSearching" class="pagination">
+          <div class="pagination">
             <button @click="currentPage -= 1">Previous</button>
-            <span>Page {{ currentPage }} of {{ pageCount }} pages </span>
-            <button @click="currentPage++">
-              Next
-            </button>
-          </div>
-          <div v-else class="pagination">
-            <button @click="currentSearchPage -= 1">Previous</button>
-            <span>Page {{ currentSearchPage }} of {{ pageCount }} pages </span>
-            <button @click="currentSearchPage++">Next</button>
+            <span>Page {{ currentPage }} of {{ pageCount + 1 }} pages </span>
+            <button @click="currentPage++">Next</button>
           </div>
         </div>
         <div class="editForm" v-if="editState">
