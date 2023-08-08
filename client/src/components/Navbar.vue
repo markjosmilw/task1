@@ -25,7 +25,7 @@ const handleLogout = async () => {
     <RouterLink
       :class="route.path === '/' ? 'active' : ''"
       :to="isAdmin ? '/admin' : '/'"
-      >///</RouterLink
+      >MARK</RouterLink
     >
     <div class="nav">
       <RouterLink
