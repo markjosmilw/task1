@@ -12,15 +12,11 @@ const users = ref([]);
 const pageCount = ref(0);
 const profileInfo = ref({});
 const searchQuery = ref("");
-const itemsPerPage = ref(10); // Number of items to display per page
-const currentPage = ref(0); // Current page
-const firstSearch = ref(false);
+const itemsPerPage = ref(10);
+const currentPage = ref(1);
+const currentSearchPage = ref(1);
+const isSearching = ref(false);
 
-// const displayedUsers = computed(() => {
-//   const startIndex = (currentPage.value - 1) * itemsPerPage.value;
-//   const endIndex = startIndex + itemsPerPage.value;
-//   return users.value.slice(startIndex, endIndex);
-// });
 
 const deleteUser = async (userId) => {
   const accessToken = localStorage.getItem("accessToken");
@@ -55,7 +51,6 @@ const fetchInfos = async () => {
     return;
   }
   try {
-    currentPage.value += 1;
     const res = await axios.get(
       `${import.meta.env.VITE_SERVER}/api/admin/infos/page/${
         currentPage.value
@@ -72,7 +67,6 @@ const fetchInfos = async () => {
 };
 
 const handleSearch = async () => {
-  
   const accessToken = localStorage.getItem("accessToken");
   if (!accessToken) {
     return;
@@ -84,11 +78,11 @@ const handleSearch = async () => {
 
     const res = await axios.get(
       `${import.meta.env.VITE_SERVER}/api/admin/infos/${searchQuery.value}=${
-        currentPage.value
+        currentSearchPage.value
       }`,
       { headers: { Authorization: `Bearer ${accessToken}` } }
     );
-    currentPage.value++;
+    isSearching.value = true;
     users.value = res.data.response;
     console.log(res.data);
   } catch (error) {
@@ -102,6 +96,14 @@ watch(searchQuery, async (search) => {
 
 watch(editState, async () => {
   fetchInfos();
+});
+
+watch(currentPage, async () => {
+  fetchInfos();
+});
+
+watch(currentSearchPage, async () => {
+  handleSearch();
 });
 
 function editUser(info) {
@@ -121,6 +123,7 @@ fetchInfos();
 
 <template>
   <div class="container">
+    {{ isSearching }}
     <div class="landing">
       <div class="tableContainer">
         <div></div>
@@ -147,7 +150,11 @@ fetchInfos();
             <tr v-for="(info, index) in users" :key="info.userId">
               <td>
                 {{
-                  currentPage === 1
+                  isSearching
+                    ? currentSearchPage === 1
+                      ? ++index
+                      : ++index + itemsPerPage * currentSearchPage
+                    : currentPage === 1
                     ? ++index
                     : ++index + itemsPerPage * currentPage
                 }}
@@ -173,12 +180,17 @@ fetchInfos();
               </td>
             </tr>
           </table>
-          <div class="pagination">
+          <div v-if="!isSearching" class="pagination">
             <button @click="currentPage -= 1">Previous</button>
             <span>Page {{ currentPage }} of {{ pageCount }} pages </span>
-            <button @click="!searchQuery ? fetchInfos() : handleSearch()">
+            <button @click="currentPage++">
               Next
             </button>
+          </div>
+          <div v-else class="pagination">
+            <button @click="currentSearchPage -= 1">Previous</button>
+            <span>Page {{ currentSearchPage }} of {{ pageCount }} pages </span>
+            <button @click="currentSearchPage++">Next</button>
           </div>
         </div>
         <div class="editForm" v-if="editState">
