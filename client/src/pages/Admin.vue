@@ -66,7 +66,7 @@ const fetchInfos = async () => {
   }
 };
 
-const handleSearch = async () => {
+const fetchInfosBySearch = async () => {
   const accessToken = localStorage.getItem("accessToken");
   if (!accessToken) {
     return;
@@ -103,7 +103,7 @@ watch(currentPage, async () => {
 });
 
 watch(currentSearchPage, async () => {
-  handleSearch();
+  fetchInfosBySearch();
 });
 
 function editUser(info) {
@@ -133,7 +133,7 @@ fetchInfos();
             <div>
               <label for="searchInput">Search:</label>
               <input type="text" v-model="searchQuery" />
-              <button @click="handleSearch">&#x1F50E;&#xFE0E;</button>
+              <button @click="fetchInfosBySearch">&#x1F50E;&#xFE0E;</button>
             </div>
           </div>
           <table id="customers">
