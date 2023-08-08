@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-//helpers
 const {
   findUserByUsername,
   createNewUser,
@@ -9,7 +8,6 @@ const {
 const { joiUserSchema } = require("../helpers/joiService");
 const { validatePassword } = require("../helpers/bcryptService");
 
-//new update using knexService, joi
 const regUser = async (ctx) => {
   const { username, password } = ctx.request.body;
   try {
@@ -109,15 +107,9 @@ const deleteUser = async (ctx) => {
   }
 };
 
-const isAuthorized = async (ctx) => {
-  const user = ctx.request.user;
-  ctx.body = user;
-};
-
 module.exports = {
   regUser,
   logUser,
   deleteUser,
-  isAuthorized,
   loginAdmin,
 };

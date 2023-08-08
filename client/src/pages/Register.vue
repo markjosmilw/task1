@@ -4,11 +4,8 @@ import { useRouter } from "vue-router";
 import axios from "axios";
 import { useSwal } from "../composables/useSwal";
 import { yupUserSchema } from "../services/useYup";
-import { useProfileStore } from "../store/useProfileStore";
 
 const router = useRouter();
-const store = useProfileStore();
-
 const err = ref("");
 const user = ref({
   username: "",

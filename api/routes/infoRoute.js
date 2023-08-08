@@ -10,7 +10,6 @@ const {
 
 const { verifyUser, verifyAdmin } = require("../middleware/authorization");
 
-//new
 router.get("/api/admin/infos/page/:page", verifyAdmin, getProfileInfos);
 router.get("/api/admin/infos/:search", verifyAdmin, searchProfileInfos);
 router.put('/api/admin/infos/profile', verifyAdmin, updateProfile)

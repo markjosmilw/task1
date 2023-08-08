@@ -1,19 +1,14 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
-import { useAdminStore } from "../store/useAdminStore";
-
-const store = useAdminStore();
 
 const router = useRouter();
-
+const err = ref("");
 const admin = ref({
   username: "",
   password: "",
 });
-
-const err = ref("");
 
 const handleLogin = async () => {
   try {

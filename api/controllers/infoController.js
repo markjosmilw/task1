@@ -1,4 +1,3 @@
-//helpers
 const { joiProfileSchema } = require("../helpers/joiService");
 const {
   fetchUsers,
@@ -14,8 +13,8 @@ const getProfileInfos = async (ctx) => {
     const users = await fetchUsers(page);
     const pages = await countUsersPage();
     const p = pages["count(*)"];
-    const pageCount = (p - (p % 10)) / 10; //pages["count(*)"] - (pages["count(*)"] % 10)
-    ctx.body = { response: users, pageCount: pageCount }; //calculate the page count here
+    const pageCount = (p - (p % 10)) / 10;
+    ctx.body = { response: users, pageCount: pageCount };
   } catch (error) {
     console.log(object);
     ctx.status = 500;
@@ -31,8 +30,8 @@ const searchProfileInfos = async (ctx) => {
     const users = await fetchUsersLikeFirstName(searchInput, searchPage);
     const pages = await countUsersPage(searchInput);
     const p = pages["count(*)"];
-    const pageCount = (p - (p % 10)) / 10; //pages["count(*)"] - (pages["count(*)"] % 10)
-    ctx.body = { response: users, pageCount: pageCount }; //calculate the page count here
+    const pageCount = (p - (p % 10)) / 10;
+    ctx.body = { response: users, pageCount: pageCount };
   } catch (error) {
     ctx.status = 500;
     ctx.body = { error: error };
