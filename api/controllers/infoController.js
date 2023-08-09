@@ -23,6 +23,7 @@ const getProfileInfos = async (ctx) => {
 };
 
 const searchProfileInfos = async (ctx) => {
+  //route query
   const search = ctx.request.params.search;
   const searchInput = search.split("=")[0];
   const searchPage = parseInt(search.split("=")[1]);

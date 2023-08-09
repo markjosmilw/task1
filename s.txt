@@ -6,3 +6,14 @@ jwt tokens are stored in headers
 session time for users/admin
 fetch users info by part
 fetch searched users info by part
+
+
+//
+separae api for backend, separate route frontend
+sessiontimeout
+separate folders for controllers
+combine table personal and _contact
+pagination numbers
+proper use of joins
+database column snakecase _ss 
+search all columns

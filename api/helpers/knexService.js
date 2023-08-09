@@ -18,13 +18,14 @@ async function fetchUsers(page) {
 }
 
 async function countUsersPage(searchInput) {
-  if (searchInput)
+  if (searchInput){
     return await knex("_users")
       .count()
       .leftJoin("_personal", { "_personal.userId": "_users.id" })
       .where({ "_users.deletedAt": null, "_users.isAdmin": 0 })
       .where("_personal.firstName", "like", `${searchInput}%`)
       .first();
+  }
   return await knex("_users")
     .count()
     .where({ "_users.deletedAt": null, "_users.isAdmin": 0 })
@@ -35,7 +36,7 @@ async function fetchUsersLikeFirstName(searchInput, pageNum) {
   return await knex("_users")
     .leftJoin("_personal", { "_personal.userId": "_users.id" })
     .leftJoin("_contact", { "_contact.userId": "_users.id" })
-    .where("_personal.firstName", "like", `${searchInput}%`)
+    .where("_personal.firstName", "like", `%${searchInput}%`)
     .where({ "_users.deletedAt": null, "_users.isAdmin": 0 })
     .limit(10)
     .offset(pageNum == 1 ? 0 : pageNum * 10 - 10);
@@ -46,7 +47,7 @@ async function createNewUser(username, password) {
   const uid = await knex("_users").insert({
     username: username,
     password: hashedPw,
-  });
+  });//bulk
   await knex("_personal").insert({
     userId: uid,
   });
@@ -59,7 +60,7 @@ async function createNewUser(username, password) {
 async function deleteUserById(id) {
   return await await knex("_users")
     .where({ id: id })
-    .update({ deletedAt: moment().format("YYYY[-]MM[-]DD") });
+    .update({ deletedAt: knex.raw("CURRDATE()") }); //knex currentdate
 }
 
 async function findAdminByUsername(username) {
@@ -68,7 +69,7 @@ async function findAdminByUsername(username) {
 
 async function getProfileInfoByUserId(userId) {
   return await knex("_personal")
-    .leftJoin("_contact", {
+    .innerJoin("_contact", {
       "_contact.userId": "_personal.userId",
     })
     .where({ "_personal.userId": userId })
@@ -84,7 +85,7 @@ async function updateProfileInfo(
   city,
   email,
   phone
-) {
+) { ///\bulk update 2 tables
   await knex("_personal").where({ userId: userId }).update({
     firstName: firstName,
     lastName: lastName,
