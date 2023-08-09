@@ -10,9 +10,11 @@ const bodyParser = require("koa-bodyparser");
 const userRoute = require("./routes/userRoute");
 const infoRoute = require("./routes/infoRoute");
 
+const user = require('./resources/user/route')
+
 app.use(cors());
 app.use(bodyParser());
-app.use(userRoute.routes());
+app.use(user.routes());
 app.use(infoRoute.routes());
 
 app.listen(PORT, () => console.log(`app is listening to port ${PORT}`));
