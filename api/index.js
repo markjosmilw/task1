@@ -11,10 +11,15 @@ const userRoute = require("./routes/userRoute");
 const infoRoute = require("./routes/infoRoute");
 
 const user = require('./resources/user/route')
+const profile = require('./resources/profile/route')
+const admin = require('./resources/admin/route')
 
 app.use(cors());
 app.use(bodyParser());
+// app.use(infoRoute.routes());
+
 app.use(user.routes());
-app.use(infoRoute.routes());
+app.use(profile.routes());
+app.use(admin.routes())
 
 app.listen(PORT, () => console.log(`app is listening to port ${PORT}`));
