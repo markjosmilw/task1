@@ -12,3 +12,10 @@ router.get("/api/admin/users/profile", getProfileList);
 router.patch("/api/admin/users/:id", deleteUser);
 
 module.exports = router;
+
+// module.exports = ({ router }) =>
+//   router
+//     .prefix("/info")
+
+//     .get("/", infoController.get) // get
+

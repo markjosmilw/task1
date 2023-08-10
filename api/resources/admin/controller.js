@@ -1,5 +1,9 @@
 const { fetchUsersByPage, getUsersTotalRow } = require("./service");
 
+// async function get(ctx) {
+//   ctx.body = "test";
+// }
+
 async function getProfileList(ctx) {
   const { search, page } = ctx.query;
   if (!search) {
@@ -27,15 +31,12 @@ async function getProfileList(ctx) {
 async function deleteUser(ctx) {
   const userId = ctx.request.params.id;
   try {
-    
-  } catch (error) {
-    
-  }
+  } catch (error) {}
 }
 
 module.exports = {
   getProfileList,
-  deleteUser
+  deleteUser,
 };
 
 //continue admin
