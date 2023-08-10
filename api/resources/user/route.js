@@ -1,8 +1,7 @@
-const Router = require("koa-router");
-const router = new Router();
-const { registerUser, loginUser } = require("./controller");
+const userController = require("./controller");
 
-router.post("/api/user/register", registerUser);
-router.post("/api/user/login", loginUser);
-
-module.exports = router;
+module.exports = ({ router }) => {
+  router
+    .post("/api/user/register", userController.register)
+    .post("/api/user/login", userController.login);
+};

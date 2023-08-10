@@ -58,7 +58,7 @@ async function createNewUser(username, password) {
 }
 
 async function deleteUserById(id) {
-  return await await knex("_users")
+  return await knex("_users")
     .where({ id: id })
     .update({ deletedAt: knex.raw("CURRDATE()") }); //knex currentdate
 }

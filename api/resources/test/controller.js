@@ -1,7 +1,5 @@
-async function get(ctx) {
-    ctx.body = 'testok'
-}
-
 module.exports = {
-    get
-}
+  async getTest(ctx) {
+    ctx.body = "ok";
+  },
+};

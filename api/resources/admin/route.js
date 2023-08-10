@@ -1,21 +1,17 @@
-//router.get("/api/admin/users/profile", getSearchedProfileList);
-// router.get("/api/admin/users/profile/:search", verifyAdmin, searchProfileInfos);
-// router.put('/api/admin/users/profile', verifyAdmin, updateProfile)
-// router.patch("/api/admin/users/:id", verifyAdmin, deleteUser);
+const adminController = require("./controller");
+const authorization = require("../authorization");
 
-const Router = require("koa-router");
-const router = new Router();
-const { verifyAdmin } = require("../authorization");
-const { getProfileList, deleteUser } = require("./controller");
+module.exports = ({ router }) => {
+  router
+    .post("/api/admin/login", adminController.login)
+    .get(
+      "/api/admin/users/profile",
 
-router.get("/api/admin/users/profile", getProfileList);
-router.patch("/api/admin/users/:id", deleteUser);
-
-module.exports = router;
-
-// module.exports = ({ router }) =>
-//   router
-//     .prefix("/info")
-
-//     .get("/", infoController.get) // get
-
+      adminController.getUserList
+    )
+    .patch(
+      "/api/admin/users/:id",
+      authorization.verifyAdmin,
+      adminController.deleteUser
+    );
+};
