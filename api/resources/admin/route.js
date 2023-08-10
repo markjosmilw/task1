@@ -1,9 +1,10 @@
 const Router = require("koa-router");
 const router = new Router();
 const { verifyAdmin } = require("../authorization");
-const { getProfileList, getSearchedProfileList } = require("./controller");
+const { getProfileList, deleteUser } = require("./controller");
 
 router.get("/api/admin/users/profile", getProfileList);
+router.patch("/api/admin/users/:id", deleteUser);
 //router.get("/api/admin/users/profile", getSearchedProfileList);
 // router.get("/api/admin/users/profile/:search", verifyAdmin, searchProfileInfos);
 // router.put('/api/admin/users/profile', verifyAdmin, updateProfile)

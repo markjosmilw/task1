@@ -1,36 +1,41 @@
-const { fetchUsersByPage, getTotalRows } = require("./service");
+const { fetchUsersByPage, getUsersTotalRow } = require("./service");
 
-const getProfileList = async (ctx) => {
+async function getProfileList() {
   const { search, page } = ctx.query;
   if (!search) {
     try {
-      const users = await fetchUsersByPage(page);
-      const totalRows = await getTotalRows();
+      const users = await fetchUsersByPage(search, page);
+      const totalRows = await getUsersTotalRow();
       const pageCount = (totalRows.count - (totalRows.count % 10)) / 10;
       ctx.body = { response: users, pageCount: pageCount };
     } catch (error) {
-      console.log(error);
       ctx.status = 500;
       ctx.body = { error: error };
     }
     return;
   }
   try {
-    ctx.body = "search";
+    const users = await fetchUsersByPage(search, page);
+    const totalRows = await getUsersTotalRow(search);
+    ctx.body = { response: users, pageCount: totalRows };
   } catch (error) {
-    console.log(error);
+    ctx.status = 500;
+    ctx.body = { error: error };
   }
-};
+}
 
-// const getSearchedProfileList = async (ctx) => {
-//   const {search, page} = ctx.query;
-//   console.log(search);
-//   console.log(page);
-// }
+async function deleteUser() {
+  const userId = ctx.request.params.id;
+  try {
+    
+  } catch (error) {
+    
+  }
+}
 
 module.exports = {
   getProfileList,
-  // getSearchedProfileList
+  deleteUser
 };
 
 //continue admin

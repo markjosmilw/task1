@@ -1,6 +1,5 @@
 const knex = require("../../database/knex");
 const bcrypt = require("bcrypt");
-const random = require('random-name')
 
 async function createNewUser(username, password, firstName, lastName) {
   const user = 
